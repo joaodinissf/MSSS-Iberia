@@ -1,4 +1,4 @@
-# Doc Folder
+# Report Folder
 
 Your project report goes here. It is mandatory to use one of the templates (latex or word) that you find herein.
 
