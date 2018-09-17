@@ -1,4 +1,4 @@
-# MATLAB Fall 2014 – Research Plan (Template)
+# MATLAB Fall 2018 – Research Plan (Template)
 (text between brackets to be removed)
 
 > * Group Name: (be creative!)
@@ -42,3 +42,8 @@
 ## Other
 
 (mention datasets you are going to use)
+
+# Reproducibility
+
+(step by step instructions to reproduce your results. *Keep in mind that people reading this should accomplish to reproduce your work within 10 minutes. It needs to be self-contained and easy to use* 
+
