@@ -4,6 +4,7 @@
 > * Group Name: (be creative!)
 > * Group participants names: (alphabetically sorted by last name)
 > * Project Title: (can be changed later)
+> * Programming language: (Python or MATLAB)
 
 ## General Introduction
 
