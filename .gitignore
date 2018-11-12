@@ -1,4 +1,5 @@
 .DS_STORE
+.vscode
 
 # Created by https://www.gitignore.io/api/jupyternotebook
 # Edit at https://www.gitignore.io/?templates=jupyternotebook
