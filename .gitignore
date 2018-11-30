@@ -13,3 +13,6 @@
 #
 
 # End of https://www.gitignore.io/api/jupyternotebook
+
+# Added by Miguel
+env_MSSS/
