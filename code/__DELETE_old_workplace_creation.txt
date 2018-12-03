@@ -1,0 +1,47 @@
+my_workplace.add_agent(
+    Agent(
+        _id = 0,
+        skillset = [Skill(_id=0, exp=np.random.rand(), mot=np.random.rand()),
+                    Skill(_id=1, exp=np.random.rand(), mot=np.random.rand()),
+                    Skill(_id=2, exp=np.random.rand(), mot=np.random.rand())]
+    )
+)
+
+my_workplace.add_agent(
+    Agent(
+        _id = 1,
+        skillset = [Skill(_id=0, exp=np.random.rand(), mot=np.random.rand()),
+                    Skill(_id=1, exp=np.random.rand(), mot=np.random.rand()),
+                    Skill(_id=2, exp=np.random.rand(), mot=np.random.rand())]
+    )
+)
+
+print(my_workplace.agents_string())
+
+----
+
+my_workplace.add_task(
+    Task(
+        _id = 0,
+        skill_order = [0, 1, 2],
+        act_duration = 4
+    )
+)
+
+my_workplace.add_task(
+    Task(
+        _id = 1,
+        skill_order = [2, 3, 2],
+        act_duration = 4
+    )
+)
+
+my_workplace.add_task(
+    Task(
+        _id = 2,
+        skill_order = [3, 3, 0],
+        act_duration = 4
+    )
+)
+
+print(my_workplace.tasks_string())

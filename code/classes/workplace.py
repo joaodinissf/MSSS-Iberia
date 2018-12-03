@@ -1,19 +1,12 @@
 import numpy as np
+import json
+from skill import Skill
+from agent import Agent
+from task import Task
+from timeline import Timeline
 
-class TimePoint:
-    def __init__(self, start_time = -1, duration = -1, action = -1, agent = -1):
-        self.start_time = start_time
-        self.duration = duration
-        self.task = action.parent
-        self.action = action
-        self.agent = agent
-    
-    def __str__(self):
-        return ''.join([
-             '[ Time: ', str(self.start_time), '-', str(self.start_time + self.duration), ', ', \
-             'Duration: ', str(self.duration), ', ', \
-             'Task(Action/Total): ', str(self.task._id), '(', str(self.action._id), '/', str(self.action.total_acts), ')', ', ', \
-             'Agent: ', str(self.agent._id), ' ]'])
+# Useful if you need to print JSON:
+# from pprint import pprint
 
 class Workplace:
     # CONSTANTS
@@ -23,21 +16,22 @@ class Workplace:
     # !TODO Are these max values right?
     max_e = 1
     max_m = 1
-    excite = 1
-    inhibit = 1
+    excite = .1
+    inhibit = .1
 
     time = 0
 
-    def __init__(self, file=False):
-        # !TODO
-        # if !file:
-        #
-        # else:
-        #     # Create an empty workplace
-        #     pass
+    def __init__(self, file=None):
+        # Create an empty workplace
         self.agents = []
+        self.completed_tasks = []
+        self.current_task = None
         self.tasks = []
-        self.timeline = [] # list of TimePoint
+        self.timeline = Timeline # list of TimePoints
+
+        if file:
+            print("Reading from input file " + file + "...")
+            self.parse_json(file)
 
     # !TODO
     # Validate...
@@ -45,12 +39,30 @@ class Workplace:
         return self.agents == other.agents and \
                 self.tasks == other.tasks
 
-    def add_task(self, task):
-        self.tasks.append(task)
+    # !TODO
+    def parse_json(self, filename):
+        with open(filename) as f:
+            data = json.load(f)
+        for idx, agent in enumerate(data['agents']):
+            self.add_agent(idx, agent)
+        for idx, task in enumerate(data['tasks']):
+            self.add_task(idx, task)
 
-    def add_agent(self, agent):
-        self.agents.append(agent)
+    def add_agent(self, idx, agent):
+        skills = [lambda skill : Skill(_id = agent.skillset['id'],
+                                       exp = agent.skillset['exp'],
+                                       mot = agent.skillset['mot'])
+                  for skill in agent['skillset']]
+        self.agents.append(Agent(_id = idx, skillset = skills))
 
+    def add_task(self, idx, task):
+        self.tasks.append(Task(_id = idx,
+                               skill_ids = task['skill_ids'],
+                               channel = task['channel'],
+                               precedence = task['precedence'],
+                               duration = task['duration']))
+
+    # !TODO Update expertise, motivation
     def choose_agent(self, action):
         # We are working with only two agents for now
         
@@ -113,18 +125,16 @@ class Workplace:
             i2 += Workplace.excite * prev_you1 * (1 - prev_i2) * diff_you
             
             allocation_time += 1
-            if allocation_time >= 10000:
+            if allocation_time >= 1000:
                 if np.random.randint(0, 2):
                     i1, you1, i2, you2 = 1, 0, 0, 1
                 else:
                     i1, you1, i2, you2 = 0, 1, 1, 0
+                break
         
         print('~~~ Who does? ~~~')
         print([i1, you1, i2, you2])
         input()
-
-        # !TODO
-        # THERE ARE INFINITE LOOPS HAPPENING
 
         if i1 > you1:
             print('I1 does!')
@@ -143,15 +153,24 @@ class Workplace:
     # !TODO
     # Can we make this smarter?
     def process_tasks(self):
-        for task in self.tasks:
+        while len(self.tasks) > 0:
             # Handle one task at a time
+            self.current_task = self.tasks.pop(0)
 
-            for action in task.actions:
-                self.choose_agent(action)
-
-            print('Processed task:\n' + str(task) + ':\n')
+            self.process_current_task()
+            
+            print('Processed task:\n' + str(self.current_task) + ':\n')
+            
+            # For debugging purposes:
             print('Current state:')
             print(self)
+
+            self.completed_tasks.append(self.current_task)
+            self.current_task = None
+
+    def process_current_task(self):
+        for action in self.current_task.actions:
+            self.choose_agent(action)
 
     # ---------- PRINTING ----------
 
@@ -167,5 +186,30 @@ class Workplace:
         return 'TASKS:\n\n' + '\n'.join(list(map(str, self.tasks)))
 
     def __str__(self):
-        return '\n'.join(list(map(str, self.timeline)))
-        #return self.agents_string() + '\n\n' + self.tasks_string()
+        # Print time stamp
+        print("Time elapsed:")
+        print(self.time, end='')
+        print(" time units.")
+        
+        # !TODO
+        # Print Tasks: Completed, Current, To-Do
+        print("Completed tasks:")
+        for task in self.completed_tasks:
+            print(task)        
+
+        print("Current task:")
+        print(self.current_task)
+
+        print("Future tasks:")
+        for task in self.tasks:
+            print(task)
+
+        # !TODO
+        # Print Agents: List, Current Engagement...
+        print("Currently employed agents:")
+        for agent in self.agents:
+            print(agent)
+
+        # !TODO
+        # Print history of completed actions
+        print(self.timeline)

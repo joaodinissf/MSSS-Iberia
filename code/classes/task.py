@@ -1,18 +1,28 @@
 # "A task consists of actions in such a way that for every action exactly one skill is required to perform this action."
 
-
 class Task:
-    def __init__(self, _id = -1, skill_order = [], act_duration = 0):
-        self._id = _id
-        self.action_duration = act_duration    # For now, all actions require the same duration
+    def __init__(self, _id = -1, skill_ids = [], channel = [], precedence = [], duration = []):
+        # Ensure that the provided list is coherent
+        try:
+            assert(len(skill_ids) == len(channel) == len(precedence) == len(duration))
+        except AssertionError:
+            print("Incoherent skill_ids / channel / precedence / duration provided!")
+        except:
+            print("Error initialising task!")
 
-        self.actions = []
-        for i in range(len(skill_order)):
-            self.actions.append(Action(self, i, len(skill_order)-1, skill_order[i]))
+        self._id = _id
+
+        # Sort precedence array, get back the permutation as a list
+        perm, self.precedence = map(list, zip(*sorted(enumerate(precedence), key=lambda x: x[1])))
+
+        # Preserve sorting order, apply same permutation to skill_ids, channel and duration
+        self.skill_ids = [skill_ids[i] for i in perm]
+        self.channel = [channel[i] for i in perm]
+        self.duration = [duration[i] for i in perm]
+
+        # tasks -> precedence -> channels -> actions
         
-        # !TODO
-        # Does it make sense to consider different durations for each action?
-        # self.actions_durations = []
+        
     
     def __str__(self):
         return '--- TASK ' + str(self._id) + ' ---\n' + \
@@ -21,12 +31,14 @@ class Task:
 
 
 class Action:
-    def __init__(self, parent, _id = -1, total_acts = -1, skill = -1):
+    def __init__(self, parent, _id = -1, skill = -1, action_duration = -1, channel = -1, precedence = -1):
         self.parent = parent
         self._id = _id
         self.total_acts = total_acts
         self.skill = skill
-        self.duration = parent.action_duration
+        self.duration = action_duration
+        self.channel = channel
+        self.precedence = precedence
     
     def __str__(self):
         return ''.join(['< Action ', str(self._id), '/', str(self.total_acts), \
