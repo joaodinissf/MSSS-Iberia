@@ -1,0 +1,53 @@
+{
+    "agents": [
+        {
+            "skillset": [
+                {
+                    "id": 0,
+                    "exp": 0.5,
+                    "mot": 0.2
+                },
+                {
+                    "id": 1,
+                    "exp": 0.6,
+                    "mot": 0.5
+                }
+            ]
+        },
+        {
+            "skillset": [
+                {
+                    "id": 0,
+                    "exp": 0.2,
+                    "mot": 0.1
+                },
+                {
+                    "id": 1,
+                    "exp": 0.5,
+                    "mot": 0.8
+                }
+            ]
+        }
+    ],
+    
+    "tasks": [
+        {
+            "skill_ids": [0, 1, 1],
+            "channel": [0, 1, 2],
+            "precedence": [0, 0, 0],
+            "duration": [4, 4, 4]
+        },
+        {
+            "skill_ids": [0, 1, 2],
+            "channel": [0, 1, 2],
+            "precedence": [0, 0, 0],
+            "duration": [4, 4, 4]
+        },
+        {
+            "skill_ids": [0, 1, 2],
+            "channel": [0, 1, 2],
+            "precedence": [0, 0, 0],
+            "duration": [4, 4, 4]
+        }
+    ]
+}
