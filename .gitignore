@@ -1,3 +1,5 @@
+env_MSSS/
+
 .DS_STORE
 .vscode
 
@@ -13,7 +15,6 @@
 #
 
 # End of https://www.gitignore.io/api/jupyternotebook
-
 
 # Created by https://www.gitignore.io/api/virtualenv
 # Edit at https://www.gitignore.io/?templates=virtualenv
