@@ -32,22 +32,121 @@
     
     "tasks": [
         {
-            "skill_ids": [],
-            "channel": [],
-            "precedence": [],
-            "duration": []
+            "precedence": [
+                {
+                    "precedence_id": ,
+                    "channels": [
+                        {
+                            "channel_id": ,
+                            "actions": [
+                                {
+                                    "action_id": ,
+                                    "skill": ,
+                                    "duration": 
+                                }
+                            ]
+                        },
+                        {
+                            "channel_id": ,
+                            "actions": [
+                                {
+                                    "action_id": ,
+                                    "skill": ,
+                                    "duration": 
+                                }
+                            ]
+                        },
+                        {
+                            "channel_id": ,
+                            "actions": [
+                                {
+                                    "action_id": ,
+                                    "skill": ,
+                                    "duration": 
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         },
         {
-            "skill_ids": [],
-            "channel": [],
-            "precedence": [],
-            "duration": [4]
+            "precedence": [
+                {
+                    "precedence_id": ,
+                    "channels": [
+                        {
+                            "channel_id": ,
+                            "actions": [
+                                {
+                                    "action_id": ,
+                                    "skill": ,
+                                    "duration": 
+                                }
+                            ]
+                        },
+                        {
+                            "channel_id": ,
+                            "actions": [
+                                {
+                                    "action_id": ,
+                                    "skill": ,
+                                    "duration": 
+                                }
+                            ]
+                        },
+                        {
+                            "channel_id": ,
+                            "actions": [
+                                {
+                                    "action_id": ,
+                                    "skill": ,
+                                    "duration": 
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         },
         {
-            "skill_ids": [],
-            "channel": [],
-            "precedence": [],
-            "duration": [4]
+            "precedence": [
+                {
+                    "precedence_id": ,
+                    "channels": [
+                        {
+                            "channel_id": ,
+                            "actions": [
+                                {
+                                    "action_id": ,
+                                    "skill": ,
+                                    "duration": 
+                                }
+                            ]
+                        },
+                        {
+                            "channel_id": ,
+                            "actions": [
+                                {
+                                    "action_id": ,
+                                    "skill": ,
+                                    "duration": 
+                                }
+                            ]
+                        },
+                        {
+                            "channel_id": ,
+                            "actions": [
+                                {
+                                    "action_id": ,
+                                    "skill": ,
+                                    "duration": 
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
