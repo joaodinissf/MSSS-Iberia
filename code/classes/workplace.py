@@ -39,7 +39,6 @@ class Workplace:
         return self.agents == other.agents and \
                 self.tasks == other.tasks
 
-    # !TODO
     def parse_json(self, filename):
         with open(filename) as f:
             data = json.load(f)
@@ -56,11 +55,7 @@ class Workplace:
         self.agents.append(Agent(_id = idx, skillset = skills))
 
     def add_task(self, idx, task):
-        self.tasks.append(Task(_id = idx,
-                               skill_ids = task['skill_ids'],
-                               channel = task['channel'],
-                               precedence = task['precedence'],
-                               duration = task['duration']))
+        self.tasks.append(Task(_id = idx, json_task_precedence = task))
 
     # !TODO Update expertise, motivation
     def choose_agent(self, action):

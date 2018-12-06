@@ -1,11 +1,12 @@
-import plotly.plotly as py
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 import plotly.graph_objs as go
+import numpy as np
 
 class Event:
-    def __init__(self, start_time = -1, duration = -1, action = -1, agent = -1):
+    def __init__(self, start_time = -1, duration = -1, task = -1, action = -1, agent = -1):
         self.start_time = start_time
         self.duration = duration
-        self.task = action.parent
+        self.task = task
         self.action = action
         self.agent = agent
     
@@ -22,7 +23,7 @@ class Timeline:
         self.end = None
     
     def compute_end(self):
-        self.end = max([lambda e: e.start_time + e.duration for e in self.events])
+        self.end = max(map(lambda e: e.start_time + e.duration, self.events))
         return self.end
 
     def __str__(self):
@@ -34,32 +35,47 @@ class Timeline:
 
         # Create rectangles for the plot
         rects = []
-        for idx, event in enumerate(events):
+        for idx, event in enumerate(self.events):
             rects.append({'type': 'rect',
                           'x0': event.start_time,
                           'y0': idx,
                           'x1': event.start_time + event.duration,
                           'y1': idx+1,
                           'line': {
-                              'color': 'rgba(128, 0, 128, 1)',
+                              'color': 'rgba(53, 208, 255, 1)',
                               'width': 2,
                               },
-                          'fillcolor': 'rgba(128, 0, 128, 0.7)',
+                          'fillcolor': 'rgba(53, 208, 255, 0.7)',
             })
         
+        trace0 = go.Scatter(
+            x=[e.start_time + e.duration/2 for e in self.events],
+            y=np.array(list(range(1, len(self.events)+1))) - 0.5,
+
+            text=[ 'Agent {0}<br><b>Task {1}</b>'.format(e.agent, e.task._id) for e in self.events ],
+            #textposition='middle center',
+            #textposition='middle right',
+
+            mode='text',
+        )
+        data = [trace0]
+
         # Make plot
         layout = {
             'xaxis': {
-                'range': [0, self.compute_end()],
+                'autorange': True,
+                #'range': [0, self.compute_end()],
                 'showgrid': False,
             },
             'yaxis': {
-                'range': [0, len(events)+2]
+                'range': [0, len(self.events)+2]
             },
             'shapes': rects,
         }
+
         fig = {
+            'data': data,
             'layout': layout,
         }
 
-        py.iplot(fig, filename='shapes-rectangle')
+        iplot(fig, filename='shapes-rectangle')

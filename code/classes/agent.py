@@ -13,5 +13,10 @@ class Agent:
         self.action_history = []
 
     def __str__(self):
-        return 'Agent ' + str(self._id) + \
-               ', Skills:' + '\n' + str(list(map(str, self.skillset)))
+        stm_str = 'Short-term memory:\n' + str(list(map(str, self.skillset)))
+        ltm_str = 'Long-term memory:\n'
+
+        curr_act_str = 'Current action:\n'
+        act_hist_str = 'Action history:\n'
+        
+        return '--- AGENT ' + str(self._id) + ' ---\n' + actions_str
