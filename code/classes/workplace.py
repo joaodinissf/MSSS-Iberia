@@ -133,7 +133,7 @@ class Workplace:
             for agent in agents:
                 for action in agent.current_action:
                     self.timeline.add_event(Event(start_time = action['start_time'], \
-                                                  duration = 1, \                       # Fixed, for now
+                                                  duration = 1, # Fixed, for now
                                                   task = self.current_task._id, \
                                                   action = action._id, \
                                                   agent = agent._id, \

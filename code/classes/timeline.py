@@ -1,7 +1,9 @@
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 import plotly.graph_objs as go
 import numpy as np
-from task import *
+
+# TODO - remove if unnecessary
+#from task import *
 
 class Event:
     def __init__(self, start_time = -1, duration = -1, task = -1, action = -1, agent = -1):
