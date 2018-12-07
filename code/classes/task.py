@@ -20,9 +20,17 @@
     
 class Task:
     # Do we require some sort of task_metadata?
-    def __init__(self, _id, json_task_precedence):
+    def __init__(self, _id = -1, json_task_precedence = None):
         self._id = _id
-        self.precedence = json_task_precedence['precedence']
+        self.precedence = [] if json_task_precedence == None \
+                             else json_task_precedence['precedence']
+
+        if self.precedence != []:
+            for prec in self.precedence:
+                for channel in prec['channels']:
+                    for action in channel['actions']:
+                        action['completion'] = 0
+
         # TODO
         # Ensure that the provided file is valid
         #validate_precedences()

@@ -1,0 +1,152 @@
+{
+    "agents": [
+        {
+            "skillset": [
+                {
+                    "id": 0,
+                    "exp": 0.5,
+                    "mot": 0.2
+                },
+                {
+                    "id": 1,
+                    "exp": 0.6,
+                    "mot": 0.5
+                }
+            ]
+        },
+        {
+            "skillset": [
+                {
+                    "id": 0,
+                    "exp": 0.2,
+                    "mot": 0.1
+                },
+                {
+                    "id": 1,
+                    "exp": 0.5,
+                    "mot": 0.8
+                }
+            ]
+        }
+    ],
+    
+    "tasks": [
+        {
+            "precedence": [
+                {
+                    "precedence_id": 0,
+                    "channels": [
+                        {
+                            "channel_id": 0,
+                            "actions": [
+                                {
+                                    "action_id": 0,
+                                    "skill": 0,
+                                    "duration": 4
+                                }
+                            ]
+                        },
+                        {
+                            "channel_id": 1,
+                            "actions": [
+                                {
+                                    "action_id": 0,
+                                    "skill": 1,
+                                    "duration": 4
+                                }
+                            ]
+                        },
+                        {
+                            "channel_id": 2,
+                            "actions": [
+                                {
+                                    "action_id": 0,
+                                    "skill": 1,
+                                    "duration": 4
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "precedence": [
+                {
+                    "precedence_id": 0,
+                    "channels": [
+                        {
+                            "channel_id": 0,
+                            "actions": [
+                                {
+                                    "action_id": 0,
+                                    "skill": 0,
+                                    "duration": 4
+                                }
+                            ]
+                        },
+                        {
+                            "channel_id": 1,
+                            "actions": [
+                                {
+                                    "action_id": 0,
+                                    "skill": 1,
+                                    "duration": 4
+                                }
+                            ]
+                        },
+                        {
+                            "channel_id": 2,
+                            "actions": [
+                                {
+                                    "action_id": 0,
+                                    "skill": 2,
+                                    "duration": 4
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "precedence": [
+                {
+                    "precedence_id": 0,
+                    "channels": [
+                        {
+                            "channel_id": 0,
+                            "actions": [
+                                {
+                                    "action_id": 0,
+                                    "skill": 0,
+                                    "duration": 4
+                                }
+                            ]
+                        },
+                        {
+                            "channel_id": 1,
+                            "actions": [
+                                {
+                                    "action_id": 0,
+                                    "skill": 1,
+                                    "duration": 4
+                                }
+                            ]
+                        },
+                        {
+                            "channel_id": 2,
+                            "actions": [
+                                {
+                                    "action_id": 0,
+                                    "skill": 2,
+                                    "duration": 4
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
