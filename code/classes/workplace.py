@@ -1,29 +1,18 @@
 import numpy as np
 import json
+import matplotlib.pyplot as plt
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+import plotly.graph_objs as go
+
 from skill import Skill
 from agent import Agent
 from task import Task
-from timeline import Timeline
+from timeline import Timeline, Event
 
 # Useful if you need to print JSON:
 # from pprint import pprint
 
 class Workplace:
-    # CONSTANTS
-    lam_learn = 0.5
-    lam_motiv = 0.5
-    mu_learn = 0.5
-    mu_motiv = 0.5
-    th_e = 0.6
-    th_m = 0.6
-    # !TODO Are these max values right?
-    max_e = 1
-    max_m = 1
-    excite = .1
-    inhibit = .1
-
-    time = 0
-
     # ---------- INITIALISATION  ----------
 
     def __init__(self, file=None):
@@ -31,10 +20,25 @@ class Workplace:
         self.agents = []
         self.completed_tasks = []
         self.current_task = None
-        self.tasks = []
+        self.tasks_todo = []
         self.time = 0
         self.timeline = Timeline() # list of TimePoints
         self.allocation_times = {}
+
+        # CONSTANTS
+        self.alpha_e = 0.5
+        self.alpha_m = 0.5
+        #self.alpha_ = 0.5
+        self.lam_learn = 1
+        self.lam_motiv = 0
+        self.mu_learn = .5
+        self.mu_motiv = 0
+        self.th_e = 10
+        self.th_m = 10
+        self.max_e = 25
+        self.max_m = 25
+        self.excite = .1
+        self.inhibit = .1
 
         if file:
             print("Reading from input file " + file + "...\n")
@@ -53,6 +57,8 @@ class Workplace:
             self.add_agent(idx, agent)
         for idx, task in enumerate(data['tasks']):
             self.add_task(idx, task)
+        # TODO
+            # Import constants
 
     def add_agent(self, idx, agent):
         skills = [Skill(_id = skill['id'],
@@ -62,16 +68,16 @@ class Workplace:
         self.agents.append(Agent(_id = idx, skillset = skills))
 
     def add_task(self, idx, task):
-        self.tasks.append(Task(_id = idx, json_task_precedence = task))
+        self.tasks_todo.append(Task(_id = idx, json_task_precedence = task))
     
     # ---------- TASK PROCESSING ----------
 
     # !TODO - Can we make this smarter?
     def process_tasks(self):
         # While there is work to do...
-        while len(self.tasks) > 0:
+        while len(self.tasks_todo) > 0:
             # Tasks are handled one at a time
-            self.current_task = self.tasks.pop(0)
+            self.current_task = self.tasks_todo.pop(0)
 
             self.process_current_task()
             
@@ -82,66 +88,79 @@ class Workplace:
 
     def process_current_task(self):
         for prec in self.current_task.precedence:
-            # ~ HOUSEKEEPING ~
-            for agent in self.agents:
-                # Clear current_action, update action_history
-                agent.action_history.extend(agent.current_action)
-                agent.current_action = []
-                # Clear short-term memory, restore these skills to long-term memory
-                agent.ltm = agent.skillset
-                agent.stm = []
-            # ~ END HOUSEKEEPING ~
+            while True:
+                # ~ HOUSEKEEPING ~
+                for agent in self.agents:
+                    # Clear current_action, update action_history
+                    agent.action_history.extend(agent.current_action)
+                    agent.current_action = []                
+                # ~ END HOUSEKEEPING ~
 
-            # Assign agents to each of the channels in this layer of precedence
-            assignments, allocation_times, \
-            skill_ids, channel_ids, action_ids = zip(*[self.choose_agent(channel) for channel in prec['channels'] \
-                                                     if channel['actions'][0]['completion'] < channel['actions'][0]['duration']])
-            self.allocation_times[self.time] = sum(allocation_times)
-            
-            # ~ HOUSEKEEPING ~
-            # Update short/long-term memories
-            for agent in self.agents:
-                promote_to_stm = sorted(set([skill_ids[i] for i, a in enumerate(assignments) if a == agent._id]), \
-                                        reverse=True)
+                # Assign agents to each of the channels in this layer of precedence
+                actions_to_process = [self.choose_agent(channel) for channel in prec['channels'] \
+                    if channel['actions'][0]['completion'] < channel['actions'][0]['duration']]
                 
-                agent.stm.append = [agent.ltm.pop(s_id) for s_id in promote_to_stm]
-            
-            # Update expertise and motivation
-            for agent in self.agents:
-                # Learn
-                for skill in agent.stm:
-                    skill.expertise = skill.expertise + lam_learn * ( (max_e - skill.expertise) / max_e)
-                    skill.motivation = skill.motivation + lam_motiv * ( (max_m - skill.motivation) / max_m)
-                # Forget
-                for skill in agent.ltm:
-                    skill.expertise = ((skill.expertise - mu_learn) * max_e) / (max_e - mu_learn)
-                    skill.motivation = ((skill.motivation - mu_learn) * max_m) / (max_m - mu_motiv)
+                if len(actions_to_process) == 0:
+                    break
 
-            # Update current actions for all agents
-            for i, assignment in enumerate(assignments):
-                self.agents[assignment].current_action.append(
-                    {
-                        'task': self.current_task._id,
-                        'precedence': prec._id,
-                        'channel': channel_ids[i],
-                        'action': action_ids[i],
-                        'start_time': self.time
-                    }
-                )
-            
-            # Update timeline
-            for agent in agents:
-                for action in agent.current_action:
-                    self.timeline.add_event(Event(start_time = action['start_time'], \
-                                                  duration = 1, # Fixed, for now
-                                                  task = self.current_task._id, \
-                                                  action = action._id, \
-                                                  agent = agent._id, \
-                                                  ))
+                assignments, allocation_times, skill_ids, channel_ids, action_ids = zip(*actions_to_process)
 
-            # ~ END HOUSEKEEPING ~
+                self.allocation_times[self.time] = sum(allocation_times)
+                
+                # ~ HOUSEKEEPING ~
+                # Update short/long-term memories
+                for agent in self.agents:
+                    # Clear short-term memory, restore these skills to long-term memory
+                    agent.ltm = agent.skillset.copy()
+                    
+                    promote_to_stm = list(set([skill_ids[i] for i, a in enumerate(assignments) if a == agent._id]))
+                    
+                    agent.stm = [agent.ltm[i] for i in promote_to_stm]
+                    
+                    for i in promote_to_stm[::-1]:
+                        del agent.ltm[i]
+                
+                # Update expertise and motivation
+                for agent in self.agents:
+                    # Learn
+                    for skill in agent.stm:
+                        new_exp = skill.expertise[-1] + self.lam_learn * ( (self.max_e - skill.expertise[-1]) / self.max_e)
+                        new_mot = skill.motivation[-1] + self.lam_motiv * ( (self.max_m - skill.motivation[-1]) / self.max_m)
+                        skill.expertise.append(new_exp)
+                        skill.motivation.append(new_mot)
 
-            self.time += 1
+                    # Forget
+                    for skill in agent.ltm:
+                        new_exp = ((skill.expertise[-1] - self.mu_learn) * self.max_e) / (self.max_e - self.mu_learn)
+                        new_mot = ((skill.motivation[-1] - self.mu_learn) * self.max_m) / (self.max_m - self.mu_motiv)
+                        skill.expertise.append(new_exp)
+                        skill.motivation.append(new_mot)
+
+                # Update current actions for all agents
+                for i, assignment in enumerate(assignments):
+                    self.agents[assignment].current_action.append(
+                        {
+                            'task': self.current_task._id,
+                            'precedence': prec['precedence_id'],
+                            'channel': channel_ids[i],
+                            'action': action_ids[i],
+                            'start_time': self.time
+                        }
+                    )
+                
+                # Update timeline
+                for agent in self.agents:
+                    for action in agent.current_action:
+                        self.timeline.add_event(Event(start_time = action['start_time'], \
+                                                    duration = 1, # Fixed, for now
+                                                    task = self.current_task._id, \
+                                                    action = action['action'], \
+                                                    agent = agent._id, \
+                                                    ))
+
+                # ~ END HOUSEKEEPING ~
+
+                self.time += 1
         
         '''
         ORIGINAL (MORE VERSATILE, INCOMPLETE)
@@ -156,72 +175,71 @@ class Workplace:
             # TODO - boost active (stm) skills in all working agents...
         '''
 
-    # !TODO Update expertise, motivation
     # Returns tuple containing (agent, allocation_time)
     def choose_agent(self, channel):
         # We are working with only two agents for now
         # We also assume that there is only one action per channel
 
-        action = [action_list[0] for action_list in channel]
+        action = channel['actions'][0]
         
         # Get manageable names for agents' expertises
-        e1 = self.agents[0].skillset[action['action_id']].expertise
-        m1 = self.agents[0].skillset[action['action_id']].motivation
+        e1 = self.agents[0].skillset[action['skill']].expertise[-1]
+        m1 = self.agents[0].skillset[action['skill']].motivation[-1]
 
-        e2 = self.agents[1].skillset[action['action_id']].expertise
-        m2 = self.agents[1].skillset[action['action_id']].motivation
+        e2 = self.agents[1].skillset[action['skill']].expertise[-1]
+        m2 = self.agents[1].skillset[action['skill']].motivation[-1]
 
         # AGENT 1
         # Situation 1 - insufficient expertise
-        if e1 < Workplace.th_e:
+        if e1 < self.th_e:
             i1 = 0
             you1 = 1
         # Situation 2 - Sufficient expertise, sufficient motivation
-        elif m1 >= Workplace.th_m:
-            i1 = Workplace.l * (e1 - Workplace.th_e) / (Workplace.max_e - Workplace.th_e) + \
-                 (1 - Workplace.l) * (m1 - Workplace.th_m) / (Workplace.max_m - Workplace.th_m)
+        elif m1 >= self.th_m:
+            i1 = self.alpha_e * (e1 - self.th_e) / (self.max_e - self.th_e) + \
+                 self.alpha_m * (m1 - self.th_m) / (self.max_m - self.th_m)
             you1 = 0
         # Situation 3 - Sufficient expertise, insufficient motivation
         else:
-            i1 = Workplace.l * (e1 - Workplace.th_e) / (Workplace.max_e - Workplace.th_e)
-            you1 = (1 - Workplace.l) * (Workplace.th_m - m1) / Workplace.th_m
+            i1 = self.alpha_e * (e1 - self.th_e) / (self.max_e - self.th_e)
+            you1 = self.alpha_m * (self.th_m - m1) / self.th_m
 
         # AGENT 2
         # Situation 2 - insufficient expertise
-        if e2 < Workplace.th_e:
+        if e2 < self.th_e:
             i2 = 0
             you2 = 1
         # Situation 2 - Sufficient expertise, sufficient motivation
-        elif m2 >= Workplace.th_m:
-            i2 = Workplace.l * (e2 - Workplace.th_e) / (Workplace.max_e - Workplace.th_e) + \
-                 (1 - Workplace.l) * (m2 - Workplace.th_m) / (Workplace.max_m - Workplace.th_m)
+        elif m2 >= self.th_m:
+            i2 = self.alpha_e * (e2 - self.th_e) / (self.max_e - self.th_e) + \
+                 self.alpha_m * (m2 - self.th_m) / (self.max_m - self.th_m)
             you2 = 0
         # Situation 3 - Sufficient expertise, insufficient motivation
         else:
-            i2 = Workplace.l * (e2 - Workplace.th_e) / (Workplace.max_e - Workplace.th_e)
-            you2 = (1 - Workplace.l) * (Workplace.th_m - m2) / Workplace.th_m
+            i2 = self.alpha_e * (e2 - self.th_e) / (self.max_e - self.th_e)
+            you2 = self.alpha_m * (self.th_m - m2) / self.th_m
 
         # BEGIN NEGOTIATION PROCESS
         allocation_time = 1
         while i1 > you1 and i2 > you2 or \
               you1 > i1 and you2 > i2:
-            
+
             diff_i = abs(i1 - i2)
             diff_you = abs(you1 - you2)
 
             prev_i1, prev_i2, prev_you1, prev_you2 = i1, i2, you1, you2
 
             # Update 1
-            i1 -= Workplace.inhibit * prev_i1 * prev_i2 * diff_i
-            you1 -= Workplace.inhibit * prev_you1 * prev_you2 * diff_you
-            you1 += Workplace.excite * (1 - prev_you2) * prev_i1 * diff_i
-            i1 += Workplace.excite * prev_you1 * (1 - prev_i2) * diff_you
+            i1 -= self.inhibit * prev_i1 * prev_i2 * diff_i
+            you1 -= self.inhibit * prev_you1 * prev_you2 * diff_you
+            you1 += self.excite * (1 - prev_you2) * prev_i1 * diff_i
+            i1 += self.excite * prev_you1 * (1 - prev_i2) * diff_you
 
             # Update 2
-            i2 -= Workplace.inhibit * prev_i1 * prev_i2 * diff_i
-            you2 -= Workplace.inhibit * prev_you1 * prev_you2 * diff_you
-            you2 += Workplace.excite * (1 - prev_you2) * prev_i1 * diff_i
-            i2 += Workplace.excite * prev_you1 * (1 - prev_i2) * diff_you
+            i2 -= self.inhibit * prev_i1 * prev_i2 * diff_i
+            you2 -= self.inhibit * prev_you1 * prev_you2 * diff_you
+            you2 += self.excite * (1 - prev_you2) * prev_i1 * diff_i
+            i2 += self.excite * prev_you1 * (1 - prev_i2) * diff_you
             
             allocation_time += 1
             if allocation_time >= 1000:
@@ -237,7 +255,7 @@ class Workplace:
         # Update progress of one time unit
         action['completion'] += 1
         
-        return (agent, allocation_time, action['skill']), channel['channel_id'], action['action_id']
+        return (agent, allocation_time, action['skill'], channel['channel_id'], action['action_id'])
 
         '''
         # print('~~~ Who does? ~~~')
@@ -257,6 +275,40 @@ class Workplace:
         '''
 
     # ---------- PRINTING ----------
+    
+    def plot_skills(self, agent):
+        # y = {}
+
+        # for i, skill in enumerate(agent.skillset):
+        #     y[i] = skill.expertise
+        
+        # x = range(len(y[0]))
+        # for i in range(len(y[0])):
+        #     plt.plot(x, y(i))
+
+        y1 = np.round(np.array(agent.skillset[0].expertise))
+        y2 = np.round(np.array(agent.skillset[1].expertise))
+        x = np.round(np.array(list(range(len(y1)))))
+
+        # plt.plot(x, y1, x, y2)
+
+        # plt.show()
+
+        trace1 = go.Scatter(
+            x = x,
+            y = y1,
+            mode = 'markers'
+        )
+
+        trace2 = go.Scatter(
+            x = x,
+            y = y2,
+            mode = 'markers'
+        )
+
+        data = [trace1, trace2]
+        iplot(data)
+        
 
     def print_history(self):
         for i in range(len(self.timeline)):
@@ -267,7 +319,7 @@ class Workplace:
         return 'Agents:\n' + '\n'.join(list(map(str, self.agents)))
     
     def tasks_string(self):
-        return 'TASKS:\n\n' + '\n'.join(list(map(str, self.tasks)))
+        return 'TASKS:\n\n' + '\n'.join(list(map(str, self.tasks_todo)))
 
     def print_current_state(self):
         # Print time stamp
@@ -284,7 +336,7 @@ class Workplace:
         print(self.current_task)
 
         print("Future tasks:")
-        for task in self.tasks:
+        for task in self.tasks_todo:
             print(task)
 
         # Print Agents: List, Current Engagement...

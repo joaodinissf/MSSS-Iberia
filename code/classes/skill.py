@@ -1,8 +1,8 @@
 class Skill:
   def __init__(self, _id = -1, exp = 0, mot = 0):#, mem = 0):
     self._id = _id
-    self.expertise = exp
-    self.motivation = mot
+    self.expertise = [exp]
+    self.motivation = [mot]
 
     # !TODO
     # self.memory = mem
