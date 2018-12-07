@@ -3,7 +3,8 @@ class Agent:
         self._id = _id
 
         # Ensure skills are stored in order
-        self.skillset = sorted(skillset, key=lambda s: s['id'])
+        print(skillset)
+        self.skillset = sorted(skillset, key=lambda s: s._id)
 
         # Sanity check - skills should be consecutive integers starting at zero
         try:
