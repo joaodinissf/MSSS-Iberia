@@ -46,12 +46,6 @@ class Workplace:
             print("Reading from input file " + file + "...\n")
             self.parse_json(file)
 
-    # !TODO
-    # Validate...
-    # def __eq__(self, other):
-    #     return self.agents == other.agents and \
-    #             self.tasks == other.tasks
-
     def parse_json(self, filename):
         with open(filename) as f:
             data = json.load(f)
