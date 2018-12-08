@@ -64,7 +64,7 @@ class Timeline:
             x=[e.start_time + e.duration/2 for e in self.events],
             y=np.array(list(range(1, len(self.events)+1))) - 0.5,
 
-            text=[ 'Agent {0}<br><b>T{1} - A{2}</b>'.format(e.agent_id, e.task_id, e.action_id) for e in self.events ],
+            text=[ 'Agent {0}<br><b>T{1} | A{2}</b>'.format(e.agent_id, e.task_id, e.action_id) for e in self.events ],
             #textposition='middle center',
             #textposition='middle right',
 

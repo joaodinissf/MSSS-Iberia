@@ -124,28 +124,28 @@ def choose_agent(wp, action):
     return (agent, allocation_time, action.skill_id, action._id)
 
 def negotiate(i0, you0, i1, you1):
-    allocation_time = 1
+    allocation_time = 0
 
-    while i0 > you0 and i1 > you1 or \
-          you0 > i0 and you1 > i1:
+    while (i0 > you0 and i1 > you1) or \
+          (you0 > i0 and you1 > i1):
 
         diff_i = abs(i0 - i1)
         diff_you = abs(you0 - you1)
 
-        prev_i1, prev_i2, prev_you1, prev_you2 = i0, i1, you0, you1
+        prev_i0, prev_i1, prev_you0, prev_you1 = i0, i1, you0, you1
 
-        # Update 1
-        i0 -= P.INHIBIT * prev_i1 * prev_i2 * diff_i
-        you0 -= P.INHIBIT * prev_you1 * prev_you2 * diff_you
-        you0 += P.EXCITE * (1 - prev_you2) * prev_i1 * diff_i
-        i0 += P.EXCITE * prev_you1 * (1 - prev_i2) * diff_you
+        # Update agent 0
+        i0 -= P.INHIBIT * prev_i0 * prev_i1 * diff_i
+        you0 -= P.INHIBIT * prev_you0 * prev_you1 * diff_you
+        you0 += P.EXCITE * (1 - prev_you0) * prev_i1 * diff_i
+        i0 += P.EXCITE * prev_you1 * (1 - prev_i0) * diff_you
 
-        # Update 2
-        i1 -= P.INHIBIT * prev_i1 * prev_i2 * diff_i
-        you1 -= P.INHIBIT * prev_you1 * prev_you2 * diff_you
-        you1 += P.EXCITE * (1 - prev_you2) * prev_i1 * diff_i
-        i1 += P.EXCITE * prev_you1 * (1 - prev_i2) * diff_you
-        
+        # Update agent 1
+        i1 -= P.INHIBIT * prev_i0 * prev_i1 * diff_i
+        you1 -= P.INHIBIT * prev_you0 * prev_you1 * diff_you
+        you1 += P.EXCITE * (1 - prev_you1) * prev_i0 * diff_i
+        i1 += P.EXCITE * prev_you0 * (1 - prev_i1) * diff_you
+
         allocation_time += 1
 
         if allocation_time >= 1000:
