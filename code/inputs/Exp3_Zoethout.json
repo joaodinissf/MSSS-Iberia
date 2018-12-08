@@ -1,0 +1,291 @@
+{
+    "parameters": {
+        "task_unit_duration": 10,
+        "alpha_e": 0.5,
+        "alpha_m": 0.5,
+        "alpha_h": 0,
+        "lam_learn": 0.5,
+        "lam_motiv": 0.5,
+        "mu_learn": 0.5,
+        "mu_motiv": 0,
+        "th_e": 10,
+        "th_m": 10,
+        "max_e": 25,
+        "max_m": 25,
+        "excite": 0.1,
+        "inhibit": 0.1
+    },
+    "agents": [
+        {
+            "skillset": [
+                {
+                    "id": 0,
+                    "exp": 20,
+                    "mot": 20
+                },
+                {
+                    "id": 1,
+                    "exp": 12,
+                    "mot": 12
+                }
+            ]
+        },
+        {
+            "skillset": [
+                {
+                    "id": 0,
+                    "exp": 12,
+                    "mot": 12
+                },
+                {
+                    "id": 1,
+                    "exp": 20,
+                    "mot": 20
+                }
+            ]
+        }
+    ],
+    
+    "tasks": [
+        {
+            "actions": [
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                },
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "actions": [
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                },
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "actions": [
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                },
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "actions": [
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                },
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "actions": [
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                },
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "actions": [
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                },
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "actions": [
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                },
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "actions": [
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                },
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "actions": [
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                },
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "actions": [
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                },
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 5
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 5
+                }
+            ]
+        }
+    ]
+}
