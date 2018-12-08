@@ -256,23 +256,6 @@ class Workplace:
         
         return (agent, allocation_time, action['skill'], channel['channel_id'], action['action_id'])
 
-        '''
-        # print('~~~ Who does? ~~~')
-        # print([i1, you1, i2, you2])
-        # input()
-
-        # if i1 > you1:
-        #     print('I1 does!')
-        #     self.timeline.append(TimePoint(self.time, action.duration, action, self.agents[0]))
-        #     self.agents[0].current_action = action
-        #     self.agents[0].action_history.append(action)
-        # else:
-        #     print('I2 does!')
-        #     self.timeline.append(TimePoint(self.time, action.duration, action, self.agents[1]))
-        #     self.agents[0].current_action = action
-        #     self.agents[1].action_history.append(action)
-        '''
-
     # ---------- PRINTING ----------
     
     def plot_skills(self, agent):
