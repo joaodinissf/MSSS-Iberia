@@ -1,6 +1,19 @@
-    {
+{
     "parameters": {
-        
+        "self.task_unit_duration": 10,
+        "self.alpha_e": 0.5,
+        "self.alpha_m": 0.5,
+        "self.alpha_h": 0,
+        "self.lam_learn": 1,
+        "self.lam_motiv": 0,
+        "self.mu_learn": 0.5,
+        "self.mu_motiv": 0,
+        "self.th_e": 10,
+        "self.th_m": 10,
+        "self.max_e": 25,
+        "self.max_m": 25,
+        "self.excite": 0.1,
+        "self.inhibit": 0.1
     },
     "agents": [
         {
@@ -35,31 +48,20 @@
     
     "tasks": [
         {
-            "precedence": [
+            "actions": [
                 {
-                    "precedence_id": 0,
-                    "channels": [
-                        {
-                            "channel_id": 0,
-                            "actions": [
-                                {
-                                    "action_id": 0,
-                                    "skill": 0,
-                                    "duration": 50
-                                }
-                            ]
-                        },
-                        {
-                            "channel_id": 1,
-                            "actions": [
-                                {
-                                    "action_id": 0,
-                                    "skill": 1,
-                                    "duration": 50
-                                }
-                            ]
-                        }
-                    ]
+                    "action_id": 0,
+                    "skill": 0,
+                    "duration": 50
+                }
+            ]
+        },
+        {
+            "actions": [
+                {
+                    "action_id": 0,
+                    "skill": 1,
+                    "duration": 50
                 }
             ]
         }

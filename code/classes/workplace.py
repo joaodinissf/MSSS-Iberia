@@ -26,11 +26,11 @@ class Workplace:
         self.coordination_times = {}
         self.Tperf = {}
 
-        # CONSTANTS
+        # DEFAULT PARAMETERS
         self.task_unit_duration = 10
         self.alpha_e = 0.5
         self.alpha_m = 0.5
-        #self.alpha_ = 0.5
+        self.alpha_h = 0
         self.lam_learn = 1
         self.lam_motiv = 0
         self.mu_learn = .5
@@ -53,8 +53,8 @@ class Workplace:
             self.add_agent(idx, agent)
         for idx, task in enumerate(data['tasks']):
             self.add_task(idx, task)
-        # TODO
-            # Import constants
+        if len(data['parameters']) == 
+        self.import_parameters(data['parameters'])
 
     def add_agent(self, idx, agent):
         skills = [Skill(_id = skill['id'],
@@ -66,6 +66,22 @@ class Workplace:
     def add_task(self, idx, task):
         self.tasks_todo.append(Task(_id = idx, json_task_precedence = task))
     
+    def import_parameters(self, params):
+        self.task_unit_duration = params['task_unit_duration']
+        self.alpha_e = params['alpha_e']
+        self.alpha_m = params['alpha_m']
+        self.alpha_h = params['alpha_h']
+        self.lam_learn = params['lam_learn']
+        self.lam_motiv = params['lam_motiv']
+        self.mu_learn = params['mu_learn']
+        self.mu_motiv = params['mu_motiv']
+        self.th_e = params['th_e']
+        self.th_m = params['th_m']
+        self.max_e = params['max_e']
+        self.max_m = params['max_m']
+        self.excite = params['excite']
+        self.inhibit = params['inhibit']
+
     # ---------- TASK PROCESSING ----------
 
     # !TODO - Can we make this smarter?
