@@ -152,17 +152,41 @@ class Workplace:
         trace1 = go.Scatter(
             x = x,
             y = y1,
-            mode = 'markers'
+            mode = 'lines+markers',
+            name = 'Skill 1'
         )
 
         trace2 = go.Scatter(
             x = x,
             y = y2,
-            mode = 'markers'
+            mode = 'lines+markers',
+            name = 'Skill 2'
+        )
+
+        layout = go.Layout(
+            xaxis=dict(
+                title='Cycles',
+                titlefont=dict(
+                    family='Arial, sans-serif',
+                    size=18,
+                    color='darkgrey'
+                )
+            ),
+            yaxis=dict(
+                title='Expertise',
+                titlefont=dict(
+                    family='Arial, sans-serif',
+                    size=18,
+                    color='darkgrey'
+                )
+            )
         )
 
         data = [trace1, trace2]
-        iplot(data)
+
+        fig = go.Figure(data=data, layout=layout)
+
+        iplot(fig)
 
     def plot_performance(self):
         y = []
@@ -176,15 +200,43 @@ class Workplace:
 
         x = np.array(list(range(len(y[0]))))
 
+        names = [
+            'System',
+            'Coordination Time',
+            'Agent 1',
+            'Agent 2'
+        ]
+
         data = [
                 go.Scatter(
                     x = x,
                     y = _y,
-                    mode = 'markers'
-                ) for _y in y
+                    mode = 'lines+markers',
+                    name = names[i]
+                ) for i, _y in enumerate(y)
                ]
 
-        iplot(data)
+        layout = go.Layout(
+            xaxis=dict(
+                title='Cycles',
+                titlefont=dict(
+                    family='Arial, sans-serif',
+                    size=18,
+                    color='darkgrey'
+                )
+            ),
+            yaxis=dict(
+                title='Expertise',
+                titlefont=dict(
+                    family='Arial, sans-serif',
+                    size=18,
+                    color='darkgrey'
+                )
+            )
+        )
+
+        fig = go.Figure(data=data, layout=layout)
+        iplot(fig)
 
     def print_params(self):
         print('task_unit_duration: ' + str(P.TASK_UNIT_DURATION))
