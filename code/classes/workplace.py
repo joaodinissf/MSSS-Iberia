@@ -146,6 +146,9 @@ class Workplace:
         y2 = np.round(np.array(agent.skillset[1].expertise))
         x = np.round(np.array(list(range(len(y1)))))
 
+        y1 = [y if y > 0 else 0 for y in y1]
+        y2 = [y if y > 0 else 0 for y in y2]
+
         trace1 = go.Scatter(
             x = x,
             y = y1,
@@ -167,6 +170,9 @@ class Workplace:
         y.append(np.round(np.array(list(self.coordination_times.values()))))
         y.append(np.round(np.array(list(self.agents[0].performance_times.values()))))
         y.append(np.round(np.array(list(self.agents[1].performance_times.values()))))
+
+        for _y in y:
+            _y = [y if y > 0 else 0 for y in _y]
 
         x = np.array(list(range(len(y[0]))))
 
