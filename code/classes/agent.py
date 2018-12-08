@@ -40,14 +40,14 @@ class Agent:
         # Learn
         for skill in self.stm:
             new_exp = skill.expertise[-1] + P.LAM_LEARN * ( (P.MAX_E - skill.expertise[-1]) / P.MAX_E)
-            new_mot = skill.motivation[-1] + P.LAM_MOTIV * ( (P.MAX_M - skill.motivation[-1]) / P.MAX_M)
+            new_mot = ((skill.motivation[-1] - P.MU_MOTIV) * P.MAX_M) / (P.MAX_M - P.MU_MOTIV)
             skill.expertise.append(new_exp)
             skill.motivation.append(new_mot)
 
         # Forget
         for skill in self.ltm:
             new_exp = ((skill.expertise[-1] - P.MU_LEARN) * P.MAX_E) / (P.MAX_E - P.MU_LEARN)
-            new_mot = ((skill.motivation[-1] - P.MU_LEARN) * P.MAX_M) / (P.MAX_M - P.MU_MOTIV)
+            new_mot = skill.motivation[-1] + P.LAM_MOTIV * ( (P.MAX_M - skill.motivation[-1]) / P.MAX_M)
             skill.expertise.append(new_exp)
             skill.motivation.append(new_mot)
     
@@ -123,30 +123,37 @@ def choose_agent(wp, action):
     
     return (agent, allocation_time, action.skill_id, action._id)
 
-def negotiate(i0, you0, i1, you1):
+def negotiate(i0, you0, i1, you1, inhibit = P.INHIBIT, excite = P.EXCITE):
     allocation_time = 0
+
+    print([i0, you0, i1, you1])
+
+    diff_i = abs(i0 - i1)
+    diff_you = abs(you0 - you1)
 
     while (i0 > you0 and i1 > you1) or \
           (you0 > i0 and you1 > i1):
 
-        diff_i = abs(i0 - i1)
-        diff_you = abs(you0 - you1)
+        # diff_i = abs(i0 - i1)
+        # diff_you = abs(you0 - you1)
 
         prev_i0, prev_i1, prev_you0, prev_you1 = i0, i1, you0, you1
 
         # Update agent 0
-        i0 -= P.INHIBIT * prev_i0 * prev_i1 * diff_i
-        you0 -= P.INHIBIT * prev_you0 * prev_you1 * diff_you
-        you0 += P.EXCITE * (1 - prev_you0) * prev_i1 * diff_i
-        i0 += P.EXCITE * prev_you1 * (1 - prev_i0) * diff_you
+        i0 -= inhibit * prev_i0 * prev_i1 * diff_i
+        you0 -= inhibit * prev_you0 * prev_you1 * diff_you
+        you0 += excite * (1 - prev_you0) * prev_i1 * diff_i
+        i0 += excite * prev_you1 * (1 - prev_i0) * diff_you
 
         # Update agent 1
-        i1 -= P.INHIBIT * prev_i0 * prev_i1 * diff_i
-        you1 -= P.INHIBIT * prev_you0 * prev_you1 * diff_you
-        you1 += P.EXCITE * (1 - prev_you1) * prev_i0 * diff_i
-        i1 += P.EXCITE * prev_you0 * (1 - prev_i1) * diff_you
+        i1 -= inhibit * prev_i0 * prev_i1 * diff_i
+        you1 -= inhibit * prev_you0 * prev_you1 * diff_you
+        you1 += excite * (1 - prev_you1) * prev_i0 * diff_i
+        i1 += excite * prev_you0 * (1 - prev_i1) * diff_you
 
         allocation_time += 1
+
+        print([i0, you0, i1, you1])
 
         if allocation_time >= 1000:
             if np.random.randint(0, 2):
@@ -158,4 +165,5 @@ def negotiate(i0, you0, i1, you1):
     # The agent that will perform this action has been determined
     agent = 0 if i0 > you0 else 1
     
+    print([agent, allocation_time])
     return agent, allocation_time
