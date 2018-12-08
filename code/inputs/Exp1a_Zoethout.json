@@ -1,19 +1,19 @@
 {
     "parameters": {
-        "self.task_unit_duration": 10,
-        "self.alpha_e": 0.5,
-        "self.alpha_m": 0.5,
-        "self.alpha_h": 0,
-        "self.lam_learn": 1,
-        "self.lam_motiv": 0,
-        "self.mu_learn": 0.5,
-        "self.mu_motiv": 0,
-        "self.th_e": 10,
-        "self.th_m": 10,
-        "self.max_e": 25,
-        "self.max_m": 25,
-        "self.excite": 0.1,
-        "self.inhibit": 0.1
+        "task_unit_duration": 10,
+        "alpha_e": 0.5,
+        "alpha_m": 0.5,
+        "alpha_h": 0,
+        "lam_learn": 1,
+        "lam_motiv": 0,
+        "mu_learn": 0.5,
+        "mu_motiv": 0,
+        "th_e": 10,
+        "th_m": 10,
+        "max_e": 25,
+        "max_m": 25,
+        "excite": 0.1,
+        "inhibit": 0.1
     },
     "agents": [
         {
