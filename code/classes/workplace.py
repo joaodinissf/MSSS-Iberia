@@ -23,9 +23,11 @@ class Workplace:
         self.tasks_todo = []
         self.time = 0
         self.timeline = Timeline() # list of TimePoints
-        self.allocation_times = {}
+        self.coordination_times = {}
+        self.Tperf = {}
 
         # CONSTANTS
+        self.task_unit_duration = 10
         self.alpha_e = 0.5
         self.alpha_m = 0.5
         #self.alpha_ = 0.5
@@ -104,8 +106,11 @@ class Workplace:
                     break
 
                 assignments, allocation_times, skill_ids, channel_ids, action_ids = zip(*actions_to_process)
-
-                self.allocation_times[self.time] = sum(allocation_times)
+                self.coordination_times[self.time] = sum(allocation_times)
+                
+                # DOING
+                t_perfs = [agent.calculate_performance_time(self, skill_ids, assignments, self.time) for agent in self.agents]
+                self.Tperf[self.time] = max(t_perfs) + self.coordination_times[self.time]
                 
                 # ~ HOUSEKEEPING ~
                 # Update short/long-term memories
@@ -307,6 +312,38 @@ class Workplace:
         )
 
         data = [trace1, trace2]
+        iplot(data)
+
+    def plot_performance(self):
+        # y = {}
+
+        # for i, skill in enumerate(agent.skillset):
+        #     y[i] = skill.expertise
+        
+        # x = range(len(y[0]))
+        # for i in range(len(y[0])):
+        #     plt.plot(x, y(i))
+
+        y = []
+        y.append(np.round(np.array(list(self.Tperf.values()))))
+        y.append(np.round(np.array(list(self.coordination_times.values()))))
+        y.append(np.round(np.array(list(self.agents[0].performance_times.values()))))
+        y.append(np.round(np.array(list(self.agents[1].performance_times.values()))))
+
+        x = np.array(list(range(len(y[0]))))
+
+        # plt.plot(x, y1, x, y2)
+
+        # plt.show()
+
+        data = [
+                go.Scatter(
+                    x = x,
+                    y = _y,
+                    mode = 'markers'
+                ) for _y in y
+               ]
+
         iplot(data)
         
 
