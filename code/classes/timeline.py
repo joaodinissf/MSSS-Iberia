@@ -2,23 +2,20 @@ from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 import plotly.graph_objs as go
 import numpy as np
 
-# TODO - remove if unnecessary
-#from task import *
-
 class Event:
-    def __init__(self, start_time = -1, duration = -1, task = -1, action = -1, agent = -1):
+    def __init__(self, start_time = -1, duration = -1, task_id = -1, action_id = -1, agent_id = -1):
         self.start_time = start_time
         self.duration = duration
-        self.task = task
-        self.action = action
-        self.agent = agent
+        self.task_id = task_id
+        self.action_id = action_id
+        self.agent_id = agent_id
     
     def __str__(self):
         return ''.join([
              '[ Time: ', str(self.start_time), '-', str(self.start_time + self.duration), ', ', \
              'Duration: ', str(self.duration), ', ', \
-             'Task(Action/Total): ', str(self.task), '(', str(self.action), '/', str(self.action.total_acts), ')', ', ', \
-             'Agent: ', str(self.agent), ' ]'])
+             'Task (Action): ', str(self.task_id), ' (', str(self.action_id), '), ', \
+             'Agent: ', str(self.agent_id), ' ]'])
 
 class Timeline:
     def __init__(self):
@@ -30,11 +27,12 @@ class Timeline:
                     if len(self.events) > 0 else 1
         return self.end
 
-    # !TODO
+    # TODO
     # # Do we need a function to coalesce events? (Merge adjacent events)
     # def coalesce_events(self):
     #     pass
 
+    # TODO
     def __str__(self):
         pass
 
@@ -66,7 +64,7 @@ class Timeline:
             x=[e.start_time + e.duration/2 for e in self.events],
             y=np.array(list(range(1, len(self.events)+1))) - 0.5,
 
-            text=[ 'Agent {0}<br><b>Task {1}</b>'.format(e.agent, e.task) for e in self.events ],
+            text=[ 'Agent {0}<br><b>T{1} - A{2}</b>'.format(e.agent_id, e.task_id, e.action_id) for e in self.events ],
             #textposition='middle center',
             #textposition='middle right',
 

@@ -50,17 +50,13 @@
         {
             "actions": [
                 {
-                    "action_id": 0,
-                    "skill": 0,
+                    "id": 0,
+                    "skill_id": 0,
                     "duration": 50
-                }
-            ]
-        },
-        {
-            "actions": [
+                },
                 {
-                    "action_id": 0,
-                    "skill": 1,
+                    "id": 1,
+                    "skill_id": 1,
                     "duration": 50
                 }
             ]
