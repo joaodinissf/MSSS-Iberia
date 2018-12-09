@@ -198,6 +198,7 @@ class Workplace:
         )
 
         layout = go.Layout(
+            title='Expertise'
             xaxis=dict(
                 title='Cycles',
                 titlefont=dict(
@@ -266,6 +267,7 @@ class Workplace:
         )
 
         layout = go.Layout(
+            title='Motivation',
             xaxis=dict(
                 title='Cycles',
                 titlefont=dict(
@@ -311,6 +313,7 @@ class Workplace:
         )
 
         layout = go.Layout(
+            title='Frustration',
             xaxis=dict(
                 title='Cycles',
                 titlefont=dict(
@@ -377,6 +380,7 @@ class Workplace:
         )
 
         layout = go.Layout(
+            title='Allocations',
             xaxis=dict(
                 title='Cycles',
                 titlefont=dict(
@@ -431,6 +435,7 @@ class Workplace:
                ]
 
         layout = go.Layout(
+            title='Performance',
             xaxis=dict(
                 title='Cycles',
                 titlefont=dict(
