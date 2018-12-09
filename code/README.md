@@ -1,3 +1,4 @@
 # Code Folder 
 
-Your code goes here. You could also replace the content of this file with something more meaningful such as a brief explanation of the code structure
+All code is in code/classes
+Input/Output is in code/IO
