@@ -20,7 +20,7 @@
     "agents": [
         {
             "mbti": "INTJ",
-            "initial_frustration": 10,
+            "initialation": 10,
             "skillset":  [
         {
           "id":  0,
