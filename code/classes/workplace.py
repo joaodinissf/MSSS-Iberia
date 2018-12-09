@@ -211,6 +211,50 @@ class Workplace:
         y0 = np.array(self.agents[0].humour)
         y1 = np.array(self.agents[1].humour)
         x = np.array(list(range(len(y1))))
+        
+        trace1 = go.Scatter(
+            x = x,
+            y = y0,
+            mode = 'lines+markers',
+            name = 'Agent 1'
+        )
+
+        trace2 = go.Scatter(
+            x = x,
+            y = y1,
+            mode = 'lines+markers',
+            name = 'Agent 2'
+        )
+
+        layout = go.Layout(
+            xaxis=dict(
+                title='Cycles',
+                titlefont=dict(
+                    family='Arial, sans-serif',
+                    size=18,
+                    color='darkgrey'
+                )
+            ),
+            yaxis=dict(
+                title='Frustration',
+                titlefont=dict(
+                    family='Arial, sans-serif',
+                    size=18,
+                    color='darkgrey'
+                )
+            )
+        )
+
+        data = [trace1, trace2]
+
+        fig = go.Figure(data=data, layout=layout)
+
+        iplot(fig)
+
+    def plot_allocations(self):
+        y0 = np.array(self.agents[0].allocation_times)
+        y1 = np.array(self.agents[1].allocation_times)
+        x = np.array(list(range(len(y1))))
 
         # y1 = [y if y > 0 else 0 for y in y1]
         # y2 = [y if y > 0 else 0 for y in y2]
@@ -239,7 +283,7 @@ class Workplace:
                 )
             ),
             yaxis=dict(
-                title='Frustration',
+                title='Allocation time',
                 titlefont=dict(
                     family='Arial, sans-serif',
                     size=18,

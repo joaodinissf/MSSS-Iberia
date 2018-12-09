@@ -92,7 +92,9 @@ class Agent:
         return self.performance_times[time]
 
     def update_humour(self, immediate_frustration):
-        self.humour.append((self.humour[-1] + immediate_frustration) / 2)
+        # !TODO Justify this
+        MOV_AVG_FACTOR = 0.8
+        self.humour.append(MOV_AVG_FACTOR * self.humour[-1] + (1-MOV_AVG_FACTOR) * immediate_frustration)
 
     def update_memory(self):
         # Learn
@@ -275,7 +277,7 @@ def negotiate(i0, you0, i1, you1, inhibit = P.INHIBIT, excite = P.EXCITE, r_ij =
     return agent, allocation_time
 
 def get_relationship(agent0, agent1):
-    return 0.1
+    return 0.5
     return P.MBTI[agent0.get_mbti_ix()][agent1.get_mbti_ix()] \
            if agent0.validate_mbti() and agent1.validate_mbti() \
            else -1
@@ -287,8 +289,16 @@ def calculate_immediate_frustration(agent0, agent1):
     personality = (1 - r_ij) / r_ij
     
     for agent in [agent0, agent1]:
-        coord_penalty = (agent.allocation_times[-1] / (P.MAX_COORD_STEPS+1)) / \
-                   (1 - (agent.allocation_times[-1] / (P.MAX_COORD_STEPS+1)))
+        # coord_penalty = (agent.allocation_times[-1] / (P.MAX_COORD_STEPS+1)) / \
+        #            (1 - (agent.allocation_times[-1] / (P.MAX_COORD_STEPS+1)))
+
+        # coord_penalty = 1 - math.exp(-coord_penalty)
+
+        # !TODO Justify this
+        HARD_LIMITER = 0.1
+        alloc_time = agent.allocation_times[-1] if agent.allocation_times[-1] < round(P.MAX_COORD_STEPS * HARD_LIMITER) else (round(P.MAX_COORD_STEPS * HARD_LIMITER) - 1)
+        coord_penalty = (alloc_time / (P.MAX_COORD_STEPS / 10)) / \
+                        (1 - (alloc_time / (P.MAX_COORD_STEPS / 10)))
 
         immediate_frustrations.append(P.MAX_H * (1 - math.exp(-P.BETA * personality * coord_penalty)))
 
