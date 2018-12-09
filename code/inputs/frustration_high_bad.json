@@ -20,7 +20,7 @@
     "agents": [
         {
             "mbti": "ISTP",
-            "initialation": 10,
+            "initial_frustration": 10,
             "skillset":  [
         {
           "id":  0,

@@ -158,6 +158,11 @@ class Workplace:
 
             self.time += 1
     
+    # ---------- GETTERS ----------
+
+    def get_sum_perf_time(self):
+        return sum(self.Tperf.values())
+
     # ---------- PRINTING ----------
     
     def plot_skills(self, agent):
@@ -242,7 +247,8 @@ class Workplace:
                     size=24,
                     color='black'
                 )
-            )
+            ),
+            showlegend=True
         )
 
         data = [trace1, trace2]
@@ -336,7 +342,7 @@ class Workplace:
                 )
             ),
             yaxis=dict(
-                title='Expertise',
+                title='Performance Time',
                 titlefont=dict(
                     family='Arial, sans-serif',
                     size=24,

@@ -176,13 +176,13 @@ class Agent:
         if self.mbti[0] == 'I':
             ix += 8
         
-        if self.mbti[0] == 'N':
+        if self.mbti[1] == 'N':
             ix += 4
 
-        if self.mbti[0] == 'F':
+        if self.mbti[2] == 'F':
             ix += 2
 
-        if self.mbti[0] == 'P':
+        if self.mbti[3] == 'P':
             ix += 1
 
         return ix
@@ -234,7 +234,7 @@ def negotiate(i0, you0, i1, you1, inhibit = P.INHIBIT, excite = P.EXCITE, r_ij =
     #     f0 = P.MAX_H/2
     #     f1 = P.MAX_H/2
     
-    MAX_DELTA = 0.5 if (r_ij == -1 or f0 == -1 or f1 == -1) else 0
+    MAX_DELTA = 0 if (r_ij == -1 or f0 == -1 or f1 == -1) else 0.5
 
     allocation_time = 0
 
@@ -280,7 +280,7 @@ def negotiate(i0, you0, i1, you1, inhibit = P.INHIBIT, excite = P.EXCITE, r_ij =
     # print([agent, allocation_time])
 
     # Adjust allocation_time with a factor based on r_ij, f0, f1
-    allocation_time *= (1 + MAX_DELTA * -(r_ij - 0.5)/0.5 * (f0 - P.MAX_H/2)/(P.MAX_H/2) * (f1 - P.MAX_H/2)/(P.MAX_H/2))
+    allocation_time *= (1 + MAX_DELTA * ((-(r_ij - 0.5)/0.5 + (f0 - P.MAX_H/2)/(P.MAX_H/2) + (f1 - P.MAX_H/2)/(P.MAX_H/2)) / 3))
     
     return agent, allocation_time
 
