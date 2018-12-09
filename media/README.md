@@ -1,3 +1,5 @@
 # Graphs, Videos and Images Folder 
 
-If you produced interesting graphs, videos and images during your simulations please add them here. Remember to compress them before. 
+Plots and videos from the simulator.
+
+Also contains other miscellaneous material.

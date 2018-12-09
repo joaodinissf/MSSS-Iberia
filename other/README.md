@@ -1,3 +1,3 @@
-# Other Files Folder
+# Other Files Folder (empty)
 
-Anything else, such as datasets, reading, tutorials, etc. goes here
+Nothing else was needed

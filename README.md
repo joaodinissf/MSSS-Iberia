@@ -75,7 +75,7 @@ We will guide you through the steps needed in order to get some of the results w
 The following are things that are needed or that we assume you have:
 * Python 3 is the version used in the code. Note that things like the basic print() function changes from Py 2 to Py 3. Some things may work with Py 2, but some may not.
 
-* 
+* ...
 
 `git clone https://github.com/Amazong/MSSS-Iberia.git`
 
