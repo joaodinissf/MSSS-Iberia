@@ -32,13 +32,14 @@ class Workplace:
             self.parse_json(file)
 
     def parse_json(self, filename):
+		''' reads json file and loads agents, tasks and parameters'''
         with open(filename) as f:
             data = json.load(f)
         for idx, agent in enumerate(data['agents']):
             self.add_agent(idx, agent)
         for idx, task in enumerate(data['tasks']):
             self.add_task(idx, task)
-        
+
         self.import_parameters(data['parameters'])
 
     def add_agent(self, idx, agent):
@@ -46,18 +47,19 @@ class Workplace:
                         exp = skill['exp'],
                         mot = skill['mot'])
                   for skill in agent['skillset']]
-        
+
         mbti = agent['mbti'] if 'mbti' in agent else None
         initial_frustration = agent['initial_frustration'] if 'initial_frustration' in agent else None
-        
+
         self.agents.append(Agent(_id = idx, mbti = mbti,
                                  initial_frustration = initial_frustration,
                                  skillset = skills))
 
     def add_task(self, idx, task):
         self.tasks_todo.append(Task(_id = idx, json_task = task))
-    
+
     def import_parameters(self, params):
+		''' Loads all parameters from dictionary that comes from json file'''
         if 'task_unit_duration' in params:
             P.TASK_UNIT_DURATION = params['task_unit_duration']
         if 'alpha_e' in params:
@@ -100,41 +102,42 @@ class Workplace:
 
     # ---------- TASK PROCESSING ----------
 
-    # !TODO - Can we make this smarter?
     def process_tasks(self):
+		''' Just a while loop that processes all the tasks in another function'''
         # While there is work to do...
         while len(self.tasks_todo) > 0:
             # Tasks are handled one at a time
             self.current_task = self.tasks_todo.pop(0)
 
             self.process_current_task()
-            
+
             print('Processed task:\n' + str(self.current_task) + '\n')
 
             self.completed_tasks.append(self.current_task)
             self.current_task = None
 
     def process_current_task(self):
+		''' Processes current tasks one by one. Called by process_tasks() '''
+
         # Repeat action assignment until all actions have been completed
         while True:
-
             # Assign agents to each of the actions
             actions_to_process = [choose_agent(self, action) for action in self.current_task.actions \
                                   if action.completion < action.duration]
-            
+
             if len(actions_to_process) == 0:
                 break
 
             assignments, allocation_times, skill_ids, action_ids = zip(*actions_to_process)
             self.coordination_times[self.time] = sum(allocation_times)
 
-            t_perfs = [agent.calculate_performance_time(self, skill_ids, assignments, self.time)
+            t_perfs = [agent.calculate_performance_time(skill_ids, assignments, self.time)
                         for agent in self.agents]
             self.Tperf[self.time] = max(t_perfs) + self.coordination_times[self.time]
-            
+
             # ~ HOUSEKEEPING ~
             for agent in self.agents:
-                agent.flush_prev_act(assignments, skill_ids)            # Clear internal variables related to previous task                
+                agent.flush_prev_act(assignments, skill_ids)            # Clear internal variables related to previous task
                 agent.update_memory()                                   # Update expertise and motivation
 
             # Update current actions for all agents
@@ -153,19 +156,20 @@ class Workplace:
                                                 action_id = action_ids[i], \
                                                 agent_id = assignment, \
                                                 ))
-            
+
             # ~ END HOUSEKEEPING ~
 
             self.time += 1
-    
+
     # ---------- GETTERS ----------
 
     def get_sum_perf_time(self):
         return sum(self.Tperf.values())
 
     # ---------- PRINTING ----------
-    
+
     def plot_skills(self, agent):
+		''' Plots the expertise of two agents as a function of number of cycles'''
         y1 = np.round(np.array(agent.skillset[0].expertise))
         y2 = np.round(np.array(agent.skillset[1].expertise))
         x = np.round(np.array(list(range(len(y1)))))
@@ -213,6 +217,7 @@ class Workplace:
         iplot(fig)
 
     def plot_motivation(self, agent):
+		''' Plots the motivation of two agents as a function of #cycles'''
         y1 = np.round(np.array(agent.skillset[0].motivation))
         y2 = np.round(np.array(agent.skillset[1].motivation))
         x = np.round(np.array(list(range(len(y1)))))
@@ -260,6 +265,7 @@ class Workplace:
         iplot(fig)
 
     def plot_frustration(self):
+		''' Plots frustration of two agents as a function of #cycles'''
         y0 = np.array(self.agents[0].frustration)
         y1 = np.array(self.agents[1].frustration)
         x = np.array(list(range(len(y1))))
@@ -305,6 +311,7 @@ class Workplace:
         iplot(fig)
 
     def plot_allocations(self):
+		''' Plots allocation time it took for every cycle'''
         y0 = np.array(self.agents[0].allocation_times)
         y1 = np.array(self.agents[1].allocation_times)
         x = np.array(list(range(len(y1))))
@@ -352,6 +359,7 @@ class Workplace:
         iplot(fig)
 
     def plot_performance(self):
+		''' Plots performance times of the agents and of the whole system'''
         y = []
         y.append(np.round(np.array(list(self.Tperf.values()))))
         y.append(np.round(np.array(list(self.coordination_times.values()))))
@@ -422,9 +430,9 @@ class Workplace:
         print('\n')
 
         print('Maximum number of steps in coordination:' + str(P.MAX_COORD_STEPS))
-        
+
         print('\n')
-        
+
         # TODO - This can be made prettier
         mbti_types = ['ESTJ', 'ESTP', 'ESFJ', 'ESFP', 'ENTJ', 'ENTP', 'ENFJ', 'ENFP', 'ISTJ', 'ISTP', 'ISFJ', 'ISFP', 'INTJ', 'INTP', 'INFJ', 'INFP']
 
@@ -436,26 +444,28 @@ class Workplace:
                 print(P.MBTI[i][j], end='\t')
 
     def print_history(self):
+		''' Debugging information: same as Gantt diagram'''
         for i in range(len(self.timeline)):
             print('--- Time Point ' + str(i) + ' ---')
             print(self.timeline.events[i])
 
     def agents_string(self):
         return 'Agents:\n' + '\n'.join(list(map(str, self.agents)))
-    
+
     def tasks_string(self):
         return 'TASKS:\n\n' + '\n'.join(list(map(str, self.tasks_todo)))
 
     def print_current_state(self):
+		''' Printing for Debugging purposes '''
         # Print time stamp
         print("Time elapsed:")
         print(self.time, end='')
         print(" time units.\n")
-        
+
         # Print Tasks: Completed, Current, To-Do
         print("Completed tasks:")
         for task in self.completed_tasks:
-            print(task)        
+            print(task)
 
         print("Current task:")
         print(self.current_task)

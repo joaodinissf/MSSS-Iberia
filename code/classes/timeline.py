@@ -1,3 +1,12 @@
+######################################################################
+######################################################################
+# This file is only needed to generate the Gantt diagrams that where
+# initially generated to debug the program and have an idea of what
+# agents are doing. It does not form part of the simulator 'stricto
+# sensu'
+######################################################################
+######################################################################
+
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 import plotly.graph_objs as go
 import numpy as np
@@ -9,7 +18,7 @@ class Event:
         self.task_id = task_id
         self.action_id = action_id
         self.agent_id = agent_id
-    
+
     def __str__(self):
         return ''.join([
              '[ Time: ', str(self.start_time), '-', str(self.start_time + self.duration), ', ', \
@@ -21,18 +30,12 @@ class Timeline:
     def __init__(self):
         self.events = []             # Array of Events
         self.end = None
-    
+
     def compute_end(self):
         self.end = max(map(lambda e: e.start_time + e.duration, self.events)) \
                     if len(self.events) > 0 else 1
         return self.end
-
-    # TODO
-    # # Do we need a function to coalesce events? (Merge adjacent events)
-    # def coalesce_events(self):
-    #     pass
-
-    # TODO
+		
     def __str__(self):
         pass
 
@@ -59,7 +62,7 @@ class Timeline:
                               },
                           'fillcolor': 'rgba(53, 208, 255, 0.7)',
             })
-        
+
         trace0 = go.Scatter(
             x=[e.start_time + e.duration/2 for e in self.events],
             y=np.array(list(range(1, len(self.events)+1))) - 0.5,

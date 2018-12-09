@@ -1,3 +1,11 @@
+######################################################################
+######################################################################
+# This file was only created to generate the inputs needed for the
+# program so that we could simulate the same "Experiment 2" they have
+# with the old simulator, WORKMATE-I. It is not used for anything else
+######################################################################
+######################################################################
+
 import json
 
 def generator_exp2():
@@ -21,7 +29,7 @@ def generator_exp2():
         'excite': 0.1,
         'inhibit': 0.1
     }
-    
+
     ### AGENTS ###
 
     n_skills = 40
@@ -71,7 +79,7 @@ def generator_exp2():
         ids = list(range(4))
         skill_ids = list(range(i*n_actions, (i+1)*n_actions))
         duration = [n_cycles] * n_actions
-        
+
         actions = [
                 {
                     'id': ids[i],

@@ -2,8 +2,6 @@ import math
 import numpy as np
 import PARAMETERS as P
 
-# TODO
-# Agents should be initialised with an MBTI and an initial_frustration
 
 class Agent:
     def __init__(self, _id, mbti = None, initial_frustration = None, skillset = []):
@@ -25,15 +23,18 @@ class Agent:
 
         self.validate_internals()
 
+    #################################################################
     # ---------- INTERNAL VALIDATION ----------
+    #################################################################
+    # Used to check if values provided are correct when initializing agent
+    # This applies to all the following functions "validate_something"
 
     def validate_internals(self):
         return \
         self.validate_frustration() and \
         self.validate_skillset() and \
         self.validate_mbti()
-        # ...
-    
+
     def validate_frustration(self):
         if self.frustration == []:
             print("Warning: no initial frustration provided!")
@@ -48,18 +49,16 @@ class Agent:
             print('Invalid skillset provided! Please verify the correctness of your input.')
             exit(1)
 
-    # Validate MBTI
-    # TODO Validate this funtion...
     def validate_mbti(self):
         if self.mbti == '':
             print("Warning: empty MBTI provided!")
             return False
-        
+
         valid = True
 
         if len(self.mbti) != 4 or not isinstance(self.mbti, str):
             valid = False
-        
+
         if self.mbti[0] not in ['E', 'I']:
             valid = False
         if self.mbti[1] not in ['N', 'S']:
@@ -68,18 +67,24 @@ class Agent:
             valid = False
         if self.mbti[3] not in ['J', 'P']:
             valid = False
-        
+
         try:
             assert valid == True
         except:
             print('Invalid/incomplete MBTI provided!')
             exit(1)
-        
+
         return valid
 
+    #################################################################
     # ---------- INTERNAL UPDATES ----------
+    #################################################################
 
-    def calculate_performance_time(self, wp, skill_ids, assignments, time):
+    def calculate_performance_time(self, skill_ids, assignments, time):
+        '''
+        Calculates the time it takes to performe the tasks that can be
+        found in vector 'assignments'.
+        '''
         self.performance_times[time] = sum(
             [
                 P.TASK_UNIT_DURATION / ((P.ALPHA_E * self.get_latest_expertise(skill_ids[ix]) / P.MAX_E) +
@@ -92,14 +97,17 @@ class Agent:
         return self.performance_times[time]
 
     def update_frustration(self, immediate_frustration):
+        '''Frustration is updated with memory using a moving average. Immediate
+           frustration is weighted 0.2 and previous one 0.8
+        '''
         if self.frustration == []:
             return
-        
-        # !TODO Justify this
+
         MOV_AVG_FACTOR = 0.8
         self.frustration.append(MOV_AVG_FACTOR * self.frustration[-1] + (1-MOV_AVG_FACTOR) * immediate_frustration)
 
     def update_memory(self):
+        ''' Learning and forgetting depending on skills being in stm or ltm'''
         # Learn
         for skill in self.stm:
             new_exp = skill.expertise[-1] + P.LAM_LEARN * ( (P.MAX_E - skill.expertise[-1]) / P.MAX_E)
@@ -113,7 +121,7 @@ class Agent:
             new_mot = skill.motivation[-1] + P.LAM_MOTIV * ( (P.MAX_M - skill.motivation[-1]) / P.MAX_M)
             skill.expertise.append(new_exp)
             skill.motivation.append(new_mot)
-    
+
     def insert_alloc_time(self, coord_time):
         self.allocation_times.append(coord_time)
 
@@ -121,13 +129,13 @@ class Agent:
         # Clear current_action, update action_history
         self.action_history.extend(self.current_action)
         self.current_action = []
-        
+
         # Clear short-term memory, restore these skills to long-term memory
         self.ltm = self.skillset.copy()
-        
+
         promote_to_stm = list(set([skill_ids[i] for i, a in enumerate(assignments) if a == self._id]))
         self.stm = [self.ltm[i] for i in promote_to_stm]
-        
+
         for i in promote_to_stm[::-1]:
             del self.ltm[i]
 
@@ -140,16 +148,17 @@ class Agent:
 
     def get_frustration(self):
         return self.frustration[-1] if len(self.frustration) > 0 else -1
-    
+
     def get_initial_i_you(self, wp, skill_id):
+        ''' Returns initial value of I and YOU nodes before agents discuss '''
         # Determine current expertise and motivation for this skill
         exp = self.get_latest_expertise(skill_id)
         mot = self.get_latest_motivation(skill_id)
 
         # Should scale P.ALPHA_E, P.ALPHA_M locally
         # Normalise alphas
-        factor = 1 / (P.ALPHA_E + P.ALPHA_M)    
-        
+        factor = 1 / (P.ALPHA_E + P.ALPHA_M)
+
         ALPHA_E = P.ALPHA_E * factor
         ALPHA_M = P.ALPHA_M * factor
 
@@ -167,15 +176,18 @@ class Agent:
         else:
             i = ALPHA_E * (exp - P.TH_E) / (P.MAX_E - P.TH_E)
             you = ALPHA_M * (P.TH_M - mot) / P.TH_M
-        
+
         return i, you
 
     def get_mbti_ix(self):
+        ''' MBTI is coded with binary (I=1, E=0 and so forth)
+        INFP is 1111 and ESTP is 0000
+        '''
         ix = 0
 
         if self.mbti[0] == 'I':
             ix += 8
-        
+
         if self.mbti[1] == 'N':
             ix += 4
 
@@ -195,19 +207,22 @@ class Agent:
 
         curr_act_str = 'Current action:\n' + str(self.current_action) + '\n'
         act_hist_str = 'Action history:\n' + str(self.action_history) + '\n'
-        
+
         return '--- AGENT ' + str(self._id) + ' ---\n' + stm_str + ltm_str + curr_act_str + act_hist_str
 
 # Returns tuple containing:
 # (assignments, allocation_times, skill_ids, action_ids)
 def choose_agent(wp, action):
+	''' This function belongs to the whole class AGENT
+		It takes two agents and makes them negotiate the task allocation
+	'''
     # We are working with only two agents for now
     i0, you0 = wp.agents[0].get_initial_i_you(wp, action.skill_id)
     i1, you1 = wp.agents[1].get_initial_i_you(wp, action.skill_id)
 
     # frustration should be updated before their interaction
     f0, f1 = wp.agents[0].get_frustration(), wp.agents[1].get_frustration()
-    
+
     # Begin negotiation process
     agent, allocation_time = negotiate(i0, you0, i1, you1,
                                        r_ij = get_relationship(wp.agents[0], wp.agents[1]),
@@ -221,10 +236,10 @@ def choose_agent(wp, action):
     f0, f1 = calculate_immediate_frustration(wp.agents[0], wp.agents[1])
     wp.agents[0].update_frustration(f0)
     wp.agents[1].update_frustration(f1)
-    
+
     # Update action progress by one cycle
     action.completion += 1
-    
+
     return (agent, allocation_time, action.skill_id, action._id)
 
 def negotiate(i0, you0, i1, you1, inhibit = P.INHIBIT, excite = P.EXCITE, r_ij = -1, f0 = -1, f1 = -1):
@@ -233,13 +248,10 @@ def negotiate(i0, you0, i1, you1, inhibit = P.INHIBIT, excite = P.EXCITE, r_ij =
     #     r_ij = 0.5
     #     f0 = P.MAX_H/2
     #     f1 = P.MAX_H/2
-    
+
     MAX_DELTA = 0 if (r_ij == -1 or f0 == -1 or f1 == -1) else 0.5
 
     allocation_time = 0
-
-    # DEBUG
-    # print([i0, you0, i1, you1])
 
     while (i0 > you0 and i1 > you1) or \
           (you0 > i0 and you1 > i1):
@@ -263,46 +275,39 @@ def negotiate(i0, you0, i1, you1, inhibit = P.INHIBIT, excite = P.EXCITE, r_ij =
 
         allocation_time += 1
 
-        # DEBUG
-        # print([i0, you0, i1, you1])
-
         if allocation_time >= P.MAX_COORD_STEPS:
             if np.random.randint(0, 2):
                 i0, you0, i1, you1 = 1, 0, 0, 1
             else:
                 i0, you0, i1, you1 = 0, 1, 1, 0
             break
-    
+
     # The agent that will perform this action has been determined
     agent = 0 if i0 > you0 else 1
-    
+
     # DEBUG
     # print([agent, allocation_time])
 
     # Adjust allocation_time with a factor based on r_ij, f0, f1
     allocation_time *= (1 + MAX_DELTA * ((-(r_ij - 0.5)/0.5 + (f0 - P.MAX_H/2)/(P.MAX_H/2) + (f1 - P.MAX_H/2)/(P.MAX_H/2)) / 3))
-    
+
     return agent, allocation_time
 
 def get_relationship(agent0, agent1):
+	''' Returns the r_ij (relationship between agents as a number in (0,1))'''
     r_ij = P.MBTI[agent0.get_mbti_ix()][agent1.get_mbti_ix()] \
            if agent0.validate_mbti() and agent1.validate_mbti() \
            else -1
     return r_ij if r_ij != 0 else np.finfo(float).eps
 
 def calculate_immediate_frustration(agent0, agent1):
+	''' Calculates I(T,r_ij) with the formula that can be found in the report'''
     immediate_frustrations = []
 
     r_ij = get_relationship(agent0, agent1)
     personality = (1 - r_ij) / r_ij
-    
+
     for agent in [agent0, agent1]:
-        # coord_penalty = (agent.allocation_times[-1] / (P.MAX_COORD_STEPS+1)) / \
-        #            (1 - (agent.allocation_times[-1] / (P.MAX_COORD_STEPS+1)))
-
-        # coord_penalty = 1 - math.exp(-coord_penalty)
-
-        # !TODO Justify this
         HARD_LIMITER = 0.1
         alloc_time = agent.allocation_times[-1] if agent.allocation_times[-1] < round(P.MAX_COORD_STEPS * HARD_LIMITER) else (round(P.MAX_COORD_STEPS * HARD_LIMITER) - 1)
         coord_penalty = (alloc_time / (P.MAX_COORD_STEPS / 10)) / \
