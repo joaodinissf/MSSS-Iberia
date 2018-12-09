@@ -173,16 +173,16 @@ class Agent:
     def get_mbti_ix(self):
         ix = 0
 
-        if self.mbti[0] == 'E':
+        if self.mbti[0] == 'I':
             ix += 8
         
         if self.mbti[0] == 'N':
             ix += 4
 
-        if self.mbti[0] == 'T':
+        if self.mbti[0] == 'F':
             ix += 2
 
-        if self.mbti[0] == 'J':
+        if self.mbti[0] == 'P':
             ix += 1
 
         return ix
