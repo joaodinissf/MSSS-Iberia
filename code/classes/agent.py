@@ -284,10 +284,9 @@ def negotiate(i0, you0, i1, you1, inhibit = P.INHIBIT, excite = P.EXCITE, r_ij =
     return agent, allocation_time
 
 def get_relationship(agent0, agent1):
-    r_ij = 0.15
-    # r_ij = P.MBTI[agent0.get_mbti_ix()][agent1.get_mbti_ix()] \
-    #        if agent0.validate_mbti() and agent1.validate_mbti() \
-    #        else -1
+    r_ij = P.MBTI[agent0.get_mbti_ix()][agent1.get_mbti_ix()] \
+           if agent0.validate_mbti() and agent1.validate_mbti() \
+           else -1
     return r_ij if r_ij != 0 else np.finfo(float).eps
 
 def calculate_immediate_frustration(agent0, agent1):
