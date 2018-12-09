@@ -3,15 +3,15 @@ import numpy as np
 import PARAMETERS as P
 
 # TODO
-# Agents should be initialised with an MBTI and an initial_humour
+# Agents should be initialised with an MBTI and an initial_frustration
 
 class Agent:
-    def __init__(self, _id, mbti = None, initial_humour = None, skillset = []):
+    def __init__(self, _id, mbti = None, initial_frustration = None, skillset = []):
         self._id = _id
         self.mbti = '' if mbti == None else mbti
 
         self.skillset = sorted(skillset, key=lambda s: s._id)  # Ensure skills are stored in order
-        self.humour = [] if initial_humour == None else [initial_humour]
+        self.frustration = [] if initial_frustration == None else [initial_frustration]
 
         self.allocation_times = []
         self.performance_times = {}
@@ -29,14 +29,14 @@ class Agent:
 
     def validate_internals(self):
         return \
-        self.validate_humour() and \
+        self.validate_frustration() and \
         self.validate_skillset() and \
         self.validate_mbti()
         # ...
     
-    def validate_humour(self):
-        if self.humour == []:
-            print("Warning: no initial humour provided!")
+    def validate_frustration(self):
+        if self.frustration == []:
+            print("Warning: no initial frustration provided!")
             return False
         return True
 
@@ -84,17 +84,17 @@ class Agent:
             [
                 P.TASK_UNIT_DURATION / ((P.ALPHA_E * self.skillset[skill_ids[ix]].expertise[-1] / P.MAX_E) +
                                         (P.ALPHA_M * self.skillset[skill_ids[ix]].motivation[-1] / P.MAX_M) +
-                                        (P.ALPHA_H * self.humour[-1] / P.MAX_H))
+                                        (P.ALPHA_H * self.frustration[-1] / P.MAX_H))
                 for ix, assignment in enumerate(assignments) if assignment == self._id
             ]
         )
 
         return self.performance_times[time]
 
-    def update_humour(self, immediate_frustration):
+    def update_frustration(self, immediate_frustration):
         # !TODO Justify this
         MOV_AVG_FACTOR = 0.8
-        self.humour.append(MOV_AVG_FACTOR * self.humour[-1] + (1-MOV_AVG_FACTOR) * immediate_frustration)
+        self.frustration.append(MOV_AVG_FACTOR * self.frustration[-1] + (1-MOV_AVG_FACTOR) * immediate_frustration)
 
     def update_memory(self):
         # Learn
@@ -135,8 +135,8 @@ class Agent:
     def get_latest_motivation(self, skill_id):
         return self.skillset[skill_id].motivation[-1]
 
-    def get_humour(self):
-        return self.humour[-1] if len(self.humour) > 0 else -1
+    def get_frustration(self):
+        return self.frustration[-1] if len(self.frustration) > 0 else -1
     
     def get_initial_i_you(self, wp, skill_id):
         # Determine current expertise and motivation for this skill
@@ -202,8 +202,8 @@ def choose_agent(wp, action):
     i0, you0 = wp.agents[0].get_initial_i_you(wp, action.skill_id)
     i1, you1 = wp.agents[1].get_initial_i_you(wp, action.skill_id)
 
-    # Humour should be updated before their interaction
-    f0, f1 = wp.agents[0].get_humour(), wp.agents[1].get_humour()
+    # frustration should be updated before their interaction
+    f0, f1 = wp.agents[0].get_frustration(), wp.agents[1].get_frustration()
     
     # Begin negotiation process
     agent, allocation_time = negotiate(i0, you0, i1, you1,
@@ -216,8 +216,8 @@ def choose_agent(wp, action):
 
     # Calculate immediate frustration with information from latest interaction
     f0, f1 = calculate_immediate_frustration(wp.agents[0], wp.agents[1])
-    wp.agents[0].update_humour(f0)
-    wp.agents[1].update_humour(f1)
+    wp.agents[0].update_frustration(f0)
+    wp.agents[1].update_frustration(f1)
     
     # Update action progress by one cycle
     action.completion += 1

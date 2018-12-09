@@ -20,7 +20,7 @@
     "agents": [
         {
             "mbti": "INTJ",
-            "initial_humour": 10,
+            "initial_frustration": 10,
             "skillset": [
                 {
                     "id": 0,
@@ -36,7 +36,7 @@
         },
         {
             "mbti": "INTP",
-            "initial_humour": 15,
+            "initial_frustration": 15,
             "skillset": [
                 {
                     "id": 0,

@@ -48,10 +48,10 @@ class Workplace:
                   for skill in agent['skillset']]
         
         mbti = agent['mbti'] if 'mbti' in agent else None
-        initial_humour = agent['initial_humour'] if 'initial_humour' in agent else None
+        initial_frustration = agent['initial_frustration'] if 'initial_frustration' in agent else None
         
         self.agents.append(Agent(_id = idx, mbti = mbti,
-                                 initial_humour = initial_humour,
+                                 initial_frustration = initial_frustration,
                                  skillset = skills))
 
     def add_task(self, idx, task):
@@ -208,10 +208,10 @@ class Workplace:
         iplot(fig)
 
     def plot_frustration(self):
-        y0 = np.array(self.agents[0].humour)
-        y1 = np.array(self.agents[1].humour)
+        y0 = np.array(self.agents[0].frustration)
+        y1 = np.array(self.agents[1].frustration)
         x = np.array(list(range(len(y1))))
-        
+
         trace1 = go.Scatter(
             x = x,
             y = y0,
