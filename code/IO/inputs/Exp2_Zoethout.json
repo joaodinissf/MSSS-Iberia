@@ -3,7 +3,7 @@
     "task_unit_duration":  10,
      "alpha_e":  0.5,
      "alpha_m":  0.5,
-     "alpha_h":  0,
+     "alpha_f":  0,
      "lam_learn":  1,
      "lam_motiv":  0,
      "mu_learn":  0.05,

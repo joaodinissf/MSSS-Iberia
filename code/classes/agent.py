@@ -87,7 +87,7 @@ class Agent:
             [
                 P.TASK_UNIT_DURATION / ((P.ALPHA_E * self.get_latest_expertise(skill_ids[ix]) / P.MAX_E) +
                                         (P.ALPHA_M * self.get_latest_motivation(skill_ids[ix]) / P.MAX_M) +
-                                        (P.ALPHA_H * self.get_frustration() / P.MAX_H))
+                                        (P.ALPHA_F * self.get_frustration() / P.MAX_H))
                 for ix, assignment in enumerate(assignments) if assignment == self._id
             ]
         )

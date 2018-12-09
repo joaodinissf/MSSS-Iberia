@@ -67,8 +67,8 @@ class Workplace:
             P.ALPHA_E = params['alpha_e']
         if 'alpha_m' in params:
             P.ALPHA_M = params['alpha_m']
-        if 'alpha_h' in params:
-            P.ALPHA_H = params['alpha_h']
+        if 'alpha_f' in params:
+            P.ALPHA_F = params['alpha_f']
         if 'beta' in params:
             P.BETA = params['beta']
         if 'lam_learn' in params:
@@ -95,10 +95,10 @@ class Workplace:
             P.INHIBIT = params['inhibit']
 
         # Normalise alphas
-        if P.ALPHA_E + P.ALPHA_H + P.ALPHA_M != 1:
-            factor = 1 / (P.ALPHA_E + P.ALPHA_H + P.ALPHA_M)
+        if P.ALPHA_E + P.ALPHA_F + P.ALPHA_M != 1:
+            factor = 1 / (P.ALPHA_E + P.ALPHA_F + P.ALPHA_M)
             P.ALPHA_E *= factor
-            P.ALPHA_H *= factor
+            P.ALPHA_F *= factor
             P.ALPHA_M *= factor
 
     # ---------- TASK PROCESSING ----------
@@ -467,7 +467,7 @@ class Workplace:
         print('task_unit_duration: ' + str(P.TASK_UNIT_DURATION))
         print('alpha_e: ' + str(P.ALPHA_E))
         print('alpha_m: ' + str(P.ALPHA_M))
-        print('alpha_h: ' + str(P.ALPHA_H))
+        print('alpha_f: ' + str(P.ALPHA_F))
         print('beta: ' + str(P.BETA))
         print('lam_learn: ' + str(P.LAM_LEARN))
         print('lam_motiv: ' + str(P.LAM_MOTIV))
