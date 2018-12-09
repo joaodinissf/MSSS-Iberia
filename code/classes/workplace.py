@@ -8,7 +8,7 @@ from skill import Skill
 from agent import Agent, choose_agent
 from task import Task
 from timeline import Timeline, Event
-import PARAMETERS as P
+import parameters as P
 
 # Useful if you need to print JSON:
 # from pprint import pprint
