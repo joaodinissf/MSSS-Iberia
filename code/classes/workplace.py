@@ -216,6 +216,25 @@ class Workplace:
 
         iplot(fig)
 
+    def plot_skills_matplotlib(self, agent):
+        y1 = np.round(np.array(agent.skillset[0].expertise))
+        y2 = np.round(np.array(agent.skillset[1].expertise))
+        x = np.round(np.array(list(range(len(y1)))))
+
+        y1 = [y if y > 0 else 0 for y in y1]
+        y2 = [y if y > 0 else 0 for y in y2]
+
+        fig = plt.figure()
+
+        plt.plot(x, y1, '.-', x, y2, '.-')
+        plt.xlabel('Cycles')
+        plt.ylabel('Expertise')
+        plt.title('Evolution of expertise: Agent ' + str(agent._id))
+        plt.legend(['Skill 1', 'Skill 2'])
+        plt.draw()
+
+        return fig
+
     def plot_motivation(self, agent):
         y1 = np.round(np.array(agent.skillset[0].motivation))
         y2 = np.round(np.array(agent.skillset[1].motivation))
@@ -307,6 +326,22 @@ class Workplace:
         fig = go.Figure(data=data, layout=layout)
 
         iplot(fig)
+    
+    def plot_frustration_matplotlib(self):
+        y0 = np.array(self.agents[0].frustration)
+        y1 = np.array(self.agents[1].frustration)
+        x = np.array(list(range(len(y1))))
+
+        fig = plt.figure()
+
+        plt.plot(x, y0, '.-', x, y1, '.-')
+        plt.xlabel('Cycles')
+        plt.ylabel('Frustration')
+        plt.title('Frustration')
+        plt.legend(['Agent 1', 'Agent 2'])
+        plt.draw()
+
+        return fig
 
     def plot_allocations(self):
         y0 = np.array(self.agents[0].allocation_times)
@@ -404,6 +439,29 @@ class Workplace:
 
         fig = go.Figure(data=data, layout=layout)
         iplot(fig)
+
+    def plot_performance_matplotlib(self):
+        y = []
+        y.append(np.round(np.array(list(self.Tperf.values()))))
+        y.append(np.round(np.array(list(self.coordination_times.values()))))
+        y.append(np.round(np.array(list(self.agents[0].performance_times.values()))))
+        y.append(np.round(np.array(list(self.agents[1].performance_times.values()))))
+
+        for _y in y:
+            _y = [y if y > 0 else 0 for y in _y]
+
+        x = np.array(list(range(len(y[0]))))
+
+        fig = plt.figure()
+
+        plt.plot(x, y[0], '.-', x, y[1], '.-', x, y[2], '.-', x, y[3], '.-')
+        plt.xlabel('Cycles')
+        plt.ylabel('Time')
+        plt.title('Performance')
+        plt.legend(['System', 'Coordination Time', 'Agent 1', 'Agent 2'])
+        plt.draw()
+
+        return fig        
 
     def print_parameters(self):
         print('task_unit_duration: ' + str(P.TASK_UNIT_DURATION))
