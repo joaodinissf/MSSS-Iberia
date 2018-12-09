@@ -229,10 +229,12 @@ def choose_agent(wp, action):
 
 def negotiate(i0, you0, i1, you1, inhibit = P.INHIBIT, excite = P.EXCITE, r_ij = -1, f0 = -1, f1 = -1):
     # If parameters are not specified, they also hold no effect over the system
-    if r_ij == -1 or f0 == -1 or f1 == -1:
-        r_ij = 0.5
-        f0 = 1
-        f1 = 1
+    # if r_ij == -1 or f0 == -1 or f1 == -1:
+    #     r_ij = 0.5
+    #     f0 = P.MAX_H/2
+    #     f1 = P.MAX_H/2
+    
+    MAX_DELTA = 0.5 if (r_ij == -1 or f0 == -1 or f1 == -1) else 0
 
     allocation_time = 0
 
@@ -278,7 +280,6 @@ def negotiate(i0, you0, i1, you1, inhibit = P.INHIBIT, excite = P.EXCITE, r_ij =
     # print([agent, allocation_time])
 
     # Adjust allocation_time with a factor based on r_ij, f0, f1
-    MAX_DELTA = 0.5
     allocation_time *= (1 + MAX_DELTA * -(r_ij - 0.5)/0.5 * (f0 - P.MAX_H/2)/(P.MAX_H/2) * (f1 - P.MAX_H/2)/(P.MAX_H/2))
     
     return agent, allocation_time
