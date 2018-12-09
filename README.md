@@ -69,7 +69,17 @@ Please read the report for a more complete explanation of the project, its goals
 # Reproducibility
 
 ## Short reproducibility test 
-We will guide you through the steps needed in order to get some of the results we got.
+We will guide you through the steps needed in order to obtain Performance and Frustration plots.
+1. If you are unsure whether you have numpy and matplotlib installed, run the command `pip install numpy matplotlib`
+2. Navigate to the 'code/classes' folder, by running `cd code/classes` from the root folder of the project.
+3. Run the short reproducibility: `python3 reproducibility.py` (or `python reproducibility.py`, depending on the Python configuration on your machine).
+
+**(Optional)**
+By default, the reproducibility test is run with `frustration_low_good.json` as input file and `performance` as the output plot.
+If you want to specify a different input file or output plot, you can do so with the options `-i <input_file>` and `-o <output_plot>`.
+The possible input file names are `'frustration_low_good.json'`, `'frustration_low_bad.json'`, `'frustration_high_good.json'`, `'frustration_high_bad.json'`. High/Low refers to the measure of task variety of the system, and Good/Bad refers to the relationship between the two interacting agents.
+The possible output plots are frustration (`f`) and performance (`p`).
+One possible such command is `python3 reproducibility.py -i frustration_high_bad.json -o f`
 
 ### Requisites
 The following are things that are needed or that we assume you have:
