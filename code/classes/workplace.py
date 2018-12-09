@@ -170,7 +170,7 @@ class Workplace:
     # ---------- GETTERS ----------
 
     def get_sum_perf_time(self):
-        return sum(self.Tperf.values())
+        return int(np.round(sum(self.Tperf.values())))
 
     # ---------- PRINTING ----------
 
@@ -198,7 +198,7 @@ class Workplace:
         )
 
         layout = go.Layout(
-            title='Expertise'
+            title='Expertise',
             xaxis=dict(
                 title='Cycles',
                 titlefont=dict(
