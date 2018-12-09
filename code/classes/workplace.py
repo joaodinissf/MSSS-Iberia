@@ -121,6 +121,12 @@ class Workplace:
 
             self.completed_tasks.append(self.current_task)
             self.current_task = None
+        
+        # Output frustration values, for later plot
+        with open('../../media/moods.data', 'w') as f:
+            for i in range(len(self.agents[0].frustration)):
+                f.write(str(self.agents[0].frustration[i]) + ', ' + \
+                        str(self.agents[0].frustration[i]) + '\n')
 
     def process_current_task(self):
         ''' Processes current tasks one by one. Called by process_tasks() '''
