@@ -1,10 +1,10 @@
 import math
 import numpy as np
-import PARAMETERS as P
+import my_parameters as P
 
 
 class Agent:
-    def __init__(self, _id, mbti = None, initial_frustration = None, skillset = []):
+    def __init__(self, _id, mbti = None, initial_frustration = None, skillset = [], verbose = False):
         self._id = _id
         self.mbti = '' if mbti == None else mbti
 
@@ -21,6 +21,7 @@ class Agent:
         self.current_action = []
         self.action_history = []
 
+        self.verbose = verbose        
         self.validate_internals()
 
     #################################################################
@@ -37,7 +38,8 @@ class Agent:
 
     def validate_frustration(self):
         if self.frustration == []:
-            print("Warning: no initial frustration provided!")
+            if self.verbose:
+                print("Warning: no initial frustration provided!")
             return False
         return True
 
@@ -51,7 +53,8 @@ class Agent:
 
     def validate_mbti(self):
         if self.mbti == '':
-            print("Warning: empty MBTI provided!")
+            if self.verbose:
+                print("Warning: empty MBTI provided!")
             return False
 
         valid = True
@@ -89,7 +92,7 @@ class Agent:
             [
                 P.TASK_UNIT_DURATION / ((P.ALPHA_E * self.get_latest_expertise(skill_ids[ix]) / P.MAX_E) +
                                         (P.ALPHA_M * self.get_latest_motivation(skill_ids[ix]) / P.MAX_M) +
-                                        (P.ALPHA_H * self.get_frustration() / P.MAX_H))
+                                        (P.ALPHA_F * self.get_frustration() / P.MAX_H))
                 for ix, assignment in enumerate(assignments) if assignment == self._id
             ]
         )

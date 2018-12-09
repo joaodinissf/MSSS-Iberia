@@ -8,7 +8,7 @@ from skill import Skill
 from agent import Agent, choose_agent
 from task import Task
 from timeline import Timeline, Event
-import PARAMETERS as P
+import my_parameters as P
 
 # Useful if you need to print JSON:
 # from pprint import pprint
@@ -16,7 +16,7 @@ import PARAMETERS as P
 class Workplace:
     # ---------- INITIALISATION  ----------
 
-    def __init__(self, file=None):
+    def __init__(self, file=None, verbose=False):
         # Create an empty workplace
         self.agents = []
         self.completed_tasks = []
@@ -27,22 +27,26 @@ class Workplace:
         self.coordination_times = {}
         self.Tperf = {}
 
+        self.verbose = verbose
+
         if file:
             print("Reading from input file " + file + "...\n")
-            self.parse_json(file)
+            self.parse_json(file, verbose)
 
-    def parse_json(self, filename):
+
+		
+    def parse_json(self, filename, verbose = False):
 		''' reads json file and loads agents, tasks and parameters'''
         with open(filename) as f:
             data = json.load(f)
-        for idx, agent in enumerate(data['agents']):
-            self.add_agent(idx, agent)
+        for idx, agent in enumerate(data['agents'], verbose):
+            self.add_agent(idx, agent, verbose = verbose)
         for idx, task in enumerate(data['tasks']):
             self.add_task(idx, task)
 
         self.import_parameters(data['parameters'])
 
-    def add_agent(self, idx, agent):
+    def add_agent(self, idx, agent, verbose = False):
         skills = [Skill(_id = skill['id'],
                         exp = skill['exp'],
                         mot = skill['mot'])
@@ -53,7 +57,8 @@ class Workplace:
 
         self.agents.append(Agent(_id = idx, mbti = mbti,
                                  initial_frustration = initial_frustration,
-                                 skillset = skills))
+                                 skillset = skills,
+                                 verbose=verbose))
 
     def add_task(self, idx, task):
         self.tasks_todo.append(Task(_id = idx, json_task = task))
@@ -66,8 +71,8 @@ class Workplace:
             P.ALPHA_E = params['alpha_e']
         if 'alpha_m' in params:
             P.ALPHA_M = params['alpha_m']
-        if 'alpha_h' in params:
-            P.ALPHA_H = params['alpha_h']
+        if 'alpha_f' in params:
+            P.ALPHA_F = params['alpha_f']
         if 'beta' in params:
             P.BETA = params['beta']
         if 'lam_learn' in params:
@@ -94,10 +99,10 @@ class Workplace:
             P.INHIBIT = params['inhibit']
 
         # Normalise alphas
-        if P.ALPHA_E + P.ALPHA_H + P.ALPHA_M != 1:
-            factor = 1 / (P.ALPHA_E + P.ALPHA_H + P.ALPHA_M)
+        if P.ALPHA_E + P.ALPHA_F + P.ALPHA_M != 1:
+            factor = 1 / (P.ALPHA_E + P.ALPHA_F + P.ALPHA_M)
             P.ALPHA_E *= factor
-            P.ALPHA_H *= factor
+            P.ALPHA_F *= factor
             P.ALPHA_M *= factor
 
     # ---------- TASK PROCESSING ----------
@@ -110,8 +115,9 @@ class Workplace:
             self.current_task = self.tasks_todo.pop(0)
 
             self.process_current_task()
-
-            print('Processed task:\n' + str(self.current_task) + '\n')
+            
+            if self.verbose:
+                print('Processed task:\n' + str(self.current_task) + '\n')
 
             self.completed_tasks.append(self.current_task)
             self.current_task = None
@@ -216,6 +222,25 @@ class Workplace:
 
         iplot(fig)
 
+    def plot_skills_matplotlib(self, agent):
+        y1 = np.round(np.array(agent.skillset[0].expertise))
+        y2 = np.round(np.array(agent.skillset[1].expertise))
+        x = np.round(np.array(list(range(len(y1)))))
+
+        y1 = [y if y > 0 else 0 for y in y1]
+        y2 = [y if y > 0 else 0 for y in y2]
+
+        fig = plt.figure()
+
+        plt.plot(x, y1, '.-', x, y2, '.-')
+        plt.xlabel('Cycles')
+        plt.ylabel('Expertise')
+        plt.title('Evolution of expertise: Agent ' + str(agent._id))
+        plt.legend(['Skill 1', 'Skill 2'])
+        plt.draw()
+
+        return fig
+
     def plot_motivation(self, agent):
 		''' Plots the motivation of two agents as a function of #cycles'''
         y1 = np.round(np.array(agent.skillset[0].motivation))
@@ -309,6 +334,22 @@ class Workplace:
         fig = go.Figure(data=data, layout=layout)
 
         iplot(fig)
+    
+    def plot_frustration_matplotlib(self):
+        y0 = np.array(self.agents[0].frustration)
+        y1 = np.array(self.agents[1].frustration)
+        x = np.array(list(range(len(y1))))
+
+        fig = plt.figure()
+
+        plt.plot(x, y0, '.-', x, y1, '.-')
+        plt.xlabel('Cycles')
+        plt.ylabel('Frustration')
+        plt.title('Frustration')
+        plt.legend(['Agent 1', 'Agent 2'])
+        plt.draw()
+
+        return fig
 
     def plot_allocations(self):
 		''' Plots allocation time it took for every cycle'''
@@ -409,11 +450,34 @@ class Workplace:
         fig = go.Figure(data=data, layout=layout)
         iplot(fig)
 
+    def plot_performance_matplotlib(self):
+        y = []
+        y.append(np.round(np.array(list(self.Tperf.values()))))
+        y.append(np.round(np.array(list(self.coordination_times.values()))))
+        y.append(np.round(np.array(list(self.agents[0].performance_times.values()))))
+        y.append(np.round(np.array(list(self.agents[1].performance_times.values()))))
+
+        for _y in y:
+            _y = [y if y > 0 else 0 for y in _y]
+
+        x = np.array(list(range(len(y[0]))))
+
+        fig = plt.figure()
+
+        plt.plot(x, y[0], '.-', x, y[1], '.-', x, y[2], '.-', x, y[3], '.-')
+        plt.xlabel('Cycles')
+        plt.ylabel('Time')
+        plt.title('Performance')
+        plt.legend(['System', 'Coordination Time', 'Agent 1', 'Agent 2'])
+        plt.draw()
+
+        return fig        
+
     def print_parameters(self):
         print('task_unit_duration: ' + str(P.TASK_UNIT_DURATION))
         print('alpha_e: ' + str(P.ALPHA_E))
         print('alpha_m: ' + str(P.ALPHA_M))
-        print('alpha_h: ' + str(P.ALPHA_H))
+        print('alpha_f: ' + str(P.ALPHA_F))
         print('beta: ' + str(P.BETA))
         print('lam_learn: ' + str(P.LAM_LEARN))
         print('lam_motiv: ' + str(P.LAM_MOTIV))
