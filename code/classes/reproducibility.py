@@ -7,7 +7,7 @@ from workplace import *
 
 def parse_args():
     parser = ArgumentParser(description='Specify Input/Output')
-    parser.add_argument('-i', '--input', default='frustration_low_good.json', type=str,
+    parser.add_argument('-i', '--input', default='input_low_good.json', type=str,
                         help='Specify the name of the input file.')
     parser.add_argument('-o', '--output', default='p', type=str,
                         help='Specify the desired output (p = performance, f = frustration).')
