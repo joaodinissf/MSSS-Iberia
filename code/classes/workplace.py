@@ -46,7 +46,13 @@ class Workplace:
                         exp = skill['exp'],
                         mot = skill['mot'])
                   for skill in agent['skillset']]
-        self.agents.append(Agent(_id = idx, skillset = skills))
+        
+        mbti = agent['mbti'] if 'mbti' in agent else None
+        initial_humour = agent['initial_humour'] if 'initial_humour' in agent else None
+        
+        self.agents.append(Agent(_id = idx, mbti = mbti,
+                                 initial_humour = initial_humour,
+                                 skillset = skills))
 
     def add_task(self, idx, task):
         self.tasks_todo.append(Task(_id = idx, json_task = task))
@@ -60,6 +66,8 @@ class Workplace:
             P.ALPHA_M = params['alpha_m']
         if 'alpha_h' in params:
             P.ALPHA_H = params['alpha_h']
+        if 'beta' in params:
+            P.BETA = params['beta']
         if 'lam_learn' in params:
             P.LAM_LEARN = params['lam_learn']
         if 'lam_motiv' in params:
@@ -76,10 +84,19 @@ class Workplace:
             P.MAX_E = params['max_e']
         if 'max_m' in params:
             P.MAX_M = params['max_m']
+        if 'max_h' in params:
+            P.MAX_H = params['max_h']
         if 'excite' in params:
             P.EXCITE = params['excite']
         if 'inhibit' in params:
             P.INHIBIT = params['inhibit']
+
+        # Normalise alphas
+        if P.ALPHA_E + P.ALPHA_H + P.ALPHA_M != 1:
+            factor = 1 / (P.ALPHA_E + P.ALPHA_H + P.ALPHA_M)
+            P.ALPHA_E *= factor
+            P.ALPHA_H *= factor
+            P.ALPHA_M *= factor
 
     # ---------- TASK PROCESSING ----------
 
@@ -98,7 +115,9 @@ class Workplace:
             self.current_task = None
 
     def process_current_task(self):
+        # Repeat action assignment until all actions have been completed
         while True:
+
             # Assign agents to each of the actions
             actions_to_process = [choose_agent(self, action) for action in self.current_task.actions \
                                   if action.completion < action.duration]
@@ -115,8 +134,8 @@ class Workplace:
             
             # ~ HOUSEKEEPING ~
             for agent in self.agents:
-                agent.flush_prev_act(assignments, skill_ids)    # Clear internal variables relating to previous task                
-                agent.update_memory(self)                       # Update expertise and motivation
+                agent.flush_prev_act(assignments, skill_ids)            # Clear internal variables related to previous task                
+                agent.update_memory()                                   # Update expertise and motivation
 
             # Update current actions for all agents
             for i, assignment in enumerate(assignments):
@@ -129,7 +148,7 @@ class Workplace:
                 )
 
                 self.timeline.add_event(Event(start_time = self.time, \
-                                                duration = 1,                           # Constant, for now
+                                                duration = 1,                       # Constant, for now
                                                 task_id = self.current_task._id, \
                                                 action_id = action_ids[i], \
                                                 agent_id = assignment, \
@@ -174,6 +193,53 @@ class Workplace:
             ),
             yaxis=dict(
                 title='Expertise',
+                titlefont=dict(
+                    family='Arial, sans-serif',
+                    size=18,
+                    color='darkgrey'
+                )
+            )
+        )
+
+        data = [trace1, trace2]
+
+        fig = go.Figure(data=data, layout=layout)
+
+        iplot(fig)
+
+    def plot_frustration(self):
+        y0 = np.array(self.agents[0].humour)
+        y1 = np.array(self.agents[1].humour)
+        x = np.array(list(range(len(y1))))
+
+        # y1 = [y if y > 0 else 0 for y in y1]
+        # y2 = [y if y > 0 else 0 for y in y2]
+
+        trace1 = go.Scatter(
+            x = x,
+            y = y0,
+            mode = 'lines+markers',
+            name = 'Agent 1'
+        )
+
+        trace2 = go.Scatter(
+            x = x,
+            y = y1,
+            mode = 'lines+markers',
+            name = 'Agent 2'
+        )
+
+        layout = go.Layout(
+            xaxis=dict(
+                title='Cycles',
+                titlefont=dict(
+                    family='Arial, sans-serif',
+                    size=18,
+                    color='darkgrey'
+                )
+            ),
+            yaxis=dict(
+                title='Frustration',
                 titlefont=dict(
                     family='Arial, sans-serif',
                     size=18,

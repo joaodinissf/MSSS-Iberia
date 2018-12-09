@@ -1,0 +1,71 @@
+{
+    "parameters": {
+        "task_unit_duration": 10,
+        "alpha_e": 0.5,
+        "alpha_m": 0.5,
+        "alpha_h": 0,
+        "beta": 0.8,
+        "lam_learn": 1,
+        "lam_motiv": 0,
+        "mu_learn": 0.5,
+        "mu_motiv": 0,
+        "th_e": 10,
+        "th_m": 10,
+        "max_e": 25,
+        "max_m": 25,
+        "max_h": 25,
+        "excite": 0.1,
+        "inhibit": 0.1
+    },
+    "agents": [
+        {
+            "mbti": "INTJ",
+            "initial_humour": 10,
+            "skillset": [
+                {
+                    "id": 0,
+                    "exp": 16,
+                    "mot": 16
+                },
+                {
+                    "id": 1,
+                    "exp": 14,
+                    "mot": 14
+                }
+            ]
+        },
+        {
+            "mbti": "INTP",
+            "initial_humour": 15,
+            "skillset": [
+                {
+                    "id": 0,
+                    "exp": 14,
+                    "mot": 14
+                },
+                {
+                    "id": 1,
+                    "exp": 16,
+                    "mot": 16
+                }
+            ]
+        }
+    ],
+    
+    "tasks": [
+        {
+            "actions": [
+                {
+                    "id": 0,
+                    "skill_id": 0,
+                    "duration": 50
+                },
+                {
+                    "id": 1,
+                    "skill_id": 1,
+                    "duration": 50
+                }
+            ]
+        }
+    ]
+}
