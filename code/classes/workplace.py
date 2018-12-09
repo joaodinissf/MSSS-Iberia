@@ -212,6 +212,53 @@ class Workplace:
 
         iplot(fig)
 
+    def plot_motivation(self, agent):
+        y1 = np.round(np.array(agent.skillset[0].motivation))
+        y2 = np.round(np.array(agent.skillset[1].motivation))
+        x = np.round(np.array(list(range(len(y1)))))
+
+        y1 = [y if y > 0 else 0 for y in y1]
+        y2 = [y if y > 0 else 0 for y in y2]
+
+        trace1 = go.Scatter(
+            x = x,
+            y = y1,
+            mode = 'lines+markers',
+            name = 'Skill 1'
+        )
+
+        trace2 = go.Scatter(
+            x = x,
+            y = y2,
+            mode = 'lines+markers',
+            name = 'Skill 2'
+        )
+
+        layout = go.Layout(
+            xaxis=dict(
+                title='Cycles',
+                titlefont=dict(
+                    family='Arial, sans-serif',
+                    size=24,
+                    color='black'
+                )
+            ),
+            yaxis=dict(
+                title='Motivation',
+                titlefont=dict(
+                    family='Arial, sans-serif',
+                    size=24,
+                    color='black'
+                )
+            )
+        )
+
+        data = [trace1, trace2]
+
+        fig = go.Figure(data=data, layout=layout)
+
+        iplot(fig)
+
     def plot_frustration(self):
         y0 = np.array(self.agents[0].frustration)
         y1 = np.array(self.agents[1].frustration)
