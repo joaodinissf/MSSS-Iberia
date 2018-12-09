@@ -216,9 +216,9 @@ class Agent:
 # Returns tuple containing:
 # (assignments, allocation_times, skill_ids, action_ids)
 def choose_agent(wp, action):
-	''' This function belongs to the whole class AGENT
-		It takes two agents and makes them negotiate the task allocation
-	'''
+    ''' This function belongs to the whole class AGENT
+        It takes two agents and makes them negotiate the task allocation
+    '''
     # We are working with only two agents for now
     i0, you0 = wp.agents[0].get_initial_i_you(wp, action.skill_id)
     i1, you1 = wp.agents[1].get_initial_i_you(wp, action.skill_id)
@@ -297,14 +297,14 @@ def negotiate(i0, you0, i1, you1, inhibit = P.INHIBIT, excite = P.EXCITE, r_ij =
     return agent, allocation_time
 
 def get_relationship(agent0, agent1):
-	''' Returns the r_ij (relationship between agents as a number in (0,1))'''
+    ''' Returns the r_ij (relationship between agents as a number in (0,1))'''
     r_ij = P.MBTI[agent0.get_mbti_ix()][agent1.get_mbti_ix()] \
            if agent0.validate_mbti() and agent1.validate_mbti() \
            else -1
     return r_ij if r_ij != 0 else np.finfo(float).eps
 
 def calculate_immediate_frustration(agent0, agent1):
-	''' Calculates I(T,r_ij) with the formula that can be found in the report'''
+    ''' Calculates I(T,r_ij) with the formula that can be found in the report'''
     immediate_frustrations = []
 
     r_ij = get_relationship(agent0, agent1)

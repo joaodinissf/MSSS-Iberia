@@ -36,7 +36,7 @@ class Workplace:
 
 		
     def parse_json(self, filename, verbose = False):
-		''' reads json file and loads agents, tasks and parameters'''
+        ''' reads json file and loads agents, tasks and parameters'''
         with open(filename) as f:
             data = json.load(f)
         for idx, agent in enumerate(data['agents'], verbose):
@@ -64,7 +64,7 @@ class Workplace:
         self.tasks_todo.append(Task(_id = idx, json_task = task))
 
     def import_parameters(self, params):
-		''' Loads all parameters from dictionary that comes from json file'''
+        ''' Loads all parameters from dictionary that comes from json file'''
         if 'task_unit_duration' in params:
             P.TASK_UNIT_DURATION = params['task_unit_duration']
         if 'alpha_e' in params:
@@ -108,7 +108,7 @@ class Workplace:
     # ---------- TASK PROCESSING ----------
 
     def process_tasks(self):
-		''' Just a while loop that processes all the tasks in another function'''
+        ''' Just a while loop that processes all the tasks in another function'''
         # While there is work to do...
         while len(self.tasks_todo) > 0:
             # Tasks are handled one at a time
@@ -123,7 +123,7 @@ class Workplace:
             self.current_task = None
 
     def process_current_task(self):
-		''' Processes current tasks one by one. Called by process_tasks() '''
+        ''' Processes current tasks one by one. Called by process_tasks() '''
 
         # Repeat action assignment until all actions have been completed
         while True:
@@ -175,7 +175,7 @@ class Workplace:
     # ---------- PRINTING ----------
 
     def plot_skills(self, agent):
-		''' Plots the expertise of two agents as a function of number of cycles'''
+        ''' Plots the expertise of two agents as a function of number of cycles'''
         y1 = np.round(np.array(agent.skillset[0].expertise))
         y2 = np.round(np.array(agent.skillset[1].expertise))
         x = np.round(np.array(list(range(len(y1)))))
@@ -223,6 +223,7 @@ class Workplace:
         iplot(fig)
 
     def plot_skills_matplotlib(self, agent):
+        ''' Plots the expertise of two agents as a function of number of cycles'''
         y1 = np.round(np.array(agent.skillset[0].expertise))
         y2 = np.round(np.array(agent.skillset[1].expertise))
         x = np.round(np.array(list(range(len(y1)))))
@@ -242,7 +243,7 @@ class Workplace:
         return fig
 
     def plot_motivation(self, agent):
-		''' Plots the motivation of two agents as a function of #cycles'''
+        ''' Plots the motivation of two agents as a function of #cycles'''
         y1 = np.round(np.array(agent.skillset[0].motivation))
         y2 = np.round(np.array(agent.skillset[1].motivation))
         x = np.round(np.array(list(range(len(y1)))))
@@ -290,7 +291,7 @@ class Workplace:
         iplot(fig)
 
     def plot_frustration(self):
-		''' Plots frustration of two agents as a function of #cycles'''
+        ''' Plots frustration of two agents as a function of #cycles'''
         y0 = np.array(self.agents[0].frustration)
         y1 = np.array(self.agents[1].frustration)
         x = np.array(list(range(len(y1))))
@@ -336,6 +337,7 @@ class Workplace:
         iplot(fig)
     
     def plot_frustration_matplotlib(self):
+        ''' Plots frustration of two agents as a function of #cycles'''
         y0 = np.array(self.agents[0].frustration)
         y1 = np.array(self.agents[1].frustration)
         x = np.array(list(range(len(y1))))
@@ -352,7 +354,7 @@ class Workplace:
         return fig
 
     def plot_allocations(self):
-		''' Plots allocation time it took for every cycle'''
+        ''' Plots allocation time it took for every cycle'''
         y0 = np.array(self.agents[0].allocation_times)
         y1 = np.array(self.agents[1].allocation_times)
         x = np.array(list(range(len(y1))))
@@ -400,7 +402,7 @@ class Workplace:
         iplot(fig)
 
     def plot_performance(self):
-		''' Plots performance times of the agents and of the whole system'''
+        ''' Plots performance times of the agents and of the whole system'''
         y = []
         y.append(np.round(np.array(list(self.Tperf.values()))))
         y.append(np.round(np.array(list(self.coordination_times.values()))))
@@ -451,6 +453,7 @@ class Workplace:
         iplot(fig)
 
     def plot_performance_matplotlib(self):
+        ''' Plots performance times of the agents and of the whole system'''
         y = []
         y.append(np.round(np.array(list(self.Tperf.values()))))
         y.append(np.round(np.array(list(self.coordination_times.values()))))
@@ -508,7 +511,7 @@ class Workplace:
                 print(P.MBTI[i][j], end='\t')
 
     def print_history(self):
-		''' Debugging information: same as Gantt diagram'''
+        ''' Debugging information: same as Gantt diagram'''
         for i in range(len(self.timeline)):
             print('--- Time Point ' + str(i) + ' ---')
             print(self.timeline.events[i])
@@ -520,7 +523,7 @@ class Workplace:
         return 'TASKS:\n\n' + '\n'.join(list(map(str, self.tasks_todo)))
 
     def print_current_state(self):
-		''' Printing for Debugging purposes '''
+        ''' Printing for Debugging purposes '''
         # Print time stamp
         print("Time elapsed:")
         print(self.time, end='')

@@ -14,10 +14,7 @@ def parse_args():
     return parser.parse_args()
 
 def main():
-    args = parse_args()    
-
-    print('\nWe will be reproducing the results from the 2005 paper')
-    print('"Formalizing self-organizing processes of task allocation\".\n')
+    args = parse_args()
     
     input_file = '../IO/inputs/' + args.input
 
