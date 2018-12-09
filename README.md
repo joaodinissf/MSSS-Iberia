@@ -72,7 +72,7 @@ Please read the report for a more complete explanation of the project, its goals
 We will guide you through the steps needed in order to obtain Performance and Frustration plots.
 1. If you are unsure whether you have numpy and matplotlib installed, run `pip install numpy matplotlib`
 2. Navigate to the 'code/classes' folder, by running `cd code/classes` from the root folder of the project.
-3. Run the short reproducibility: `python3 reproducibility.py` (or `python reproducibility.py`, depending on the Python configuration on your machine).
+3. Run the short reproducibility test: `python3 reproducibility.py` (or `python reproducibility.py`, depending on the Python configuration on your machine).
 
 **(Optional)**
 By default, the reproducibility test is run with `frustration_low_good.json` as input file and `performance` as the output plot.
