@@ -68,8 +68,13 @@ Please read the report for a more complete explanation of the project, its goals
 
 # Reproducibility
 
+**Important:**
+Python 3 is the version used in the code. Note that things like the basic `print()` function changes from Py 2 to Py 3. Some things may work with Py 2, but some may not. You should have **python3** installed in your computer.
+
 ## Short reproducibility test 
 We will guide you through the steps needed in order to obtain Performance and Frustration plots.
+
+0. Clone the repository with the command `git clone https://github.com/Amazong/MSSS-Iberia.git` or download the zip file and extract it
 1. If you are unsure whether you have numpy and matplotlib installed, run `pip install numpy matplotlib`
 2. Navigate to the 'code/classes' folder, by running `cd code/classes` from the root folder of the project.
 3. Run the short reproducibility test: `python3 reproducibility.py` (or `python reproducibility.py`, depending on the Python configuration on your machine).
@@ -84,16 +89,6 @@ The possible output plots are frustration (`f`) and performance (`p`).
 
 One possible such command is `python3 reproducibility.py -i frustration_high_bad.json -o f`
 
-### Requisites
-The following are things that are needed or that we assume you have:
-* Python 3 is the version used in the code. Note that things like the basic print() function changes from Py 2 to Py 3. Some things may work with Py 2, but some may not.
-
-* ...
-
-`git clone https://github.com/Amazong/MSSS-Iberia.git`
-
-`cd code/`
-e.g. git clone URL_PROY; cd URL_PROY; python3 main.py --light_test (#--light test runs in less than 5minutes with up to date hardware)) 
 
 ## 'Full test' to reproduce all the results
 
