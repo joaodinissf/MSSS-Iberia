@@ -187,16 +187,16 @@ class Workplace:
                 title='Cycles',
                 titlefont=dict(
                     family='Arial, sans-serif',
-                    size=18,
-                    color='darkgrey'
+                    size=24,
+                    color='black'
                 )
             ),
             yaxis=dict(
                 title='Expertise',
                 titlefont=dict(
                     family='Arial, sans-serif',
-                    size=18,
-                    color='darkgrey'
+                    size=24,
+                    color='black'
                 )
             )
         )
@@ -231,16 +231,16 @@ class Workplace:
                 title='Cycles',
                 titlefont=dict(
                     family='Arial, sans-serif',
-                    size=18,
-                    color='darkgrey'
+                    size=24,
+                    color='black'
                 )
             ),
             yaxis=dict(
                 title='Frustration',
                 titlefont=dict(
                     family='Arial, sans-serif',
-                    size=18,
-                    color='darkgrey'
+                    size=24,
+                    color='black'
                 )
             )
         )
@@ -278,16 +278,16 @@ class Workplace:
                 title='Cycles',
                 titlefont=dict(
                     family='Arial, sans-serif',
-                    size=18,
-                    color='darkgrey'
+                    size=24,
+                    color='black'
                 )
             ),
             yaxis=dict(
                 title='Allocation time',
                 titlefont=dict(
                     family='Arial, sans-serif',
-                    size=18,
-                    color='darkgrey'
+                    size=24,
+                    color='black'
                 )
             )
         )
@@ -331,16 +331,16 @@ class Workplace:
                 title='Cycles',
                 titlefont=dict(
                     family='Arial, sans-serif',
-                    size=18,
-                    color='darkgrey'
+                    size=24,
+                    color='black'
                 )
             ),
             yaxis=dict(
                 title='Expertise',
                 titlefont=dict(
                     family='Arial, sans-serif',
-                    size=18,
-                    color='darkgrey'
+                    size=24,
+                    color='black'
                 )
             )
         )
