@@ -79,6 +79,10 @@ We will guide you through the steps needed in order to obtain Performance and Fr
 2. Navigate to the 'code/classes' folder, by running `cd code/classes` from the root folder of the project.
 3. Run the short reproducibility test: `python3 reproducibility.py` (or `python reproducibility.py`, depending on the Python configuration on your machine).
 
+You will see a plot of performance as a function of time. The default input as an environment is the following: two agents interact with each other to allocate 1 task consisting of 2 actions, 30 cycles each.
+
+It is a simplified case with no boredom so agents become experts in the initial task they choose, and allocation time always goes down because it is easier for them to decide who-does-what. Their performance time overlaps and that's why you only see one line.
+
 **(Optional)**
 
 By default, the reproducibility test is run with `frustration_low_good.json` as input file and `performance` as the output plot. If you want to specify a different input file or output plot, you can do so with the options `-i <input_file>` and `-o <output_plot>`.
@@ -89,6 +93,7 @@ The possible output plots are frustration (`f`) and performance (`p`).
 
 One possible such command is `python3 reproducibility.py -i frustration_high_bad.json -o f`
 
+Refer to the JSON file to understand the number of actions and cycles of each case, as well as the input parameters. The file is quite self-explanatory.
 
 ## 'Full test' to reproduce all the results
 
