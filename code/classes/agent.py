@@ -173,16 +173,16 @@ class Agent:
     def get_mbti_ix(self):
         ix = 0
 
-        if self.mbti[0] == 'E':
+        if self.mbti[0] == 'I':
             ix += 8
         
         if self.mbti[0] == 'N':
             ix += 4
 
-        if self.mbti[0] == 'T':
+        if self.mbti[0] == 'F':
             ix += 2
 
-        if self.mbti[0] == 'J':
+        if self.mbti[0] == 'P':
             ix += 1
 
         return ix
@@ -229,10 +229,12 @@ def choose_agent(wp, action):
 
 def negotiate(i0, you0, i1, you1, inhibit = P.INHIBIT, excite = P.EXCITE, r_ij = -1, f0 = -1, f1 = -1):
     # If parameters are not specified, they also hold no effect over the system
-    if r_ij == -1 or f0 == -1 or f1 == -1:
-        r_ij = 0.5
-        f0 = 1
-        f1 = 1
+    # if r_ij == -1 or f0 == -1 or f1 == -1:
+    #     r_ij = 0.5
+    #     f0 = P.MAX_H/2
+    #     f1 = P.MAX_H/2
+    
+    MAX_DELTA = 0.5 if (r_ij == -1 or f0 == -1 or f1 == -1) else 0
 
     allocation_time = 0
 
@@ -278,16 +280,14 @@ def negotiate(i0, you0, i1, you1, inhibit = P.INHIBIT, excite = P.EXCITE, r_ij =
     # print([agent, allocation_time])
 
     # Adjust allocation_time with a factor based on r_ij, f0, f1
-    MAX_DELTA = 0.5
     allocation_time *= (1 + MAX_DELTA * -(r_ij - 0.5)/0.5 * (f0 - P.MAX_H/2)/(P.MAX_H/2) * (f1 - P.MAX_H/2)/(P.MAX_H/2))
     
     return agent, allocation_time
 
 def get_relationship(agent0, agent1):
-    r_ij = 0.15
-    # r_ij = P.MBTI[agent0.get_mbti_ix()][agent1.get_mbti_ix()] \
-    #        if agent0.validate_mbti() and agent1.validate_mbti() \
-    #        else -1
+    r_ij = P.MBTI[agent0.get_mbti_ix()][agent1.get_mbti_ix()] \
+           if agent0.validate_mbti() and agent1.validate_mbti() \
+           else -1
     return r_ij if r_ij != 0 else np.finfo(float).eps
 
 def calculate_immediate_frustration(agent0, agent1):

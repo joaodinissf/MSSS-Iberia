@@ -109,7 +109,7 @@ class Workplace:
 
             self.process_current_task()
             
-            print('Processed task:\n' + str(self.current_task) + ':\n')
+            print('Processed task:\n' + str(self.current_task) + '\n')
 
             self.completed_tasks.append(self.current_task)
             self.current_task = None
@@ -187,16 +187,16 @@ class Workplace:
                 title='Cycles',
                 titlefont=dict(
                     family='Arial, sans-serif',
-                    size=18,
-                    color='darkgrey'
+                    size=24,
+                    color='black'
                 )
             ),
             yaxis=dict(
                 title='Expertise',
                 titlefont=dict(
                     family='Arial, sans-serif',
-                    size=18,
-                    color='darkgrey'
+                    size=24,
+                    color='black'
                 )
             )
         )
@@ -231,16 +231,16 @@ class Workplace:
                 title='Cycles',
                 titlefont=dict(
                     family='Arial, sans-serif',
-                    size=18,
-                    color='darkgrey'
+                    size=24,
+                    color='black'
                 )
             ),
             yaxis=dict(
                 title='Frustration',
                 titlefont=dict(
                     family='Arial, sans-serif',
-                    size=18,
-                    color='darkgrey'
+                    size=24,
+                    color='black'
                 )
             )
         )
@@ -278,16 +278,16 @@ class Workplace:
                 title='Cycles',
                 titlefont=dict(
                     family='Arial, sans-serif',
-                    size=18,
-                    color='darkgrey'
+                    size=24,
+                    color='black'
                 )
             ),
             yaxis=dict(
                 title='Allocation time',
                 titlefont=dict(
                     family='Arial, sans-serif',
-                    size=18,
-                    color='darkgrey'
+                    size=24,
+                    color='black'
                 )
             )
         )
@@ -331,16 +331,16 @@ class Workplace:
                 title='Cycles',
                 titlefont=dict(
                     family='Arial, sans-serif',
-                    size=18,
-                    color='darkgrey'
+                    size=24,
+                    color='black'
                 )
             ),
             yaxis=dict(
                 title='Expertise',
                 titlefont=dict(
                     family='Arial, sans-serif',
-                    size=18,
-                    color='darkgrey'
+                    size=24,
+                    color='black'
                 )
             )
         )
@@ -348,11 +348,12 @@ class Workplace:
         fig = go.Figure(data=data, layout=layout)
         iplot(fig)
 
-    def print_params(self):
+    def print_parameters(self):
         print('task_unit_duration: ' + str(P.TASK_UNIT_DURATION))
         print('alpha_e: ' + str(P.ALPHA_E))
         print('alpha_m: ' + str(P.ALPHA_M))
         print('alpha_h: ' + str(P.ALPHA_H))
+        print('beta: ' + str(P.BETA))
         print('lam_learn: ' + str(P.LAM_LEARN))
         print('lam_motiv: ' + str(P.LAM_MOTIV))
         print('mu_learn: ' + str(P.MU_LEARN))
@@ -361,8 +362,25 @@ class Workplace:
         print('th_m: ' + str(P.TH_M))
         print('max_e: ' + str(P.MAX_E))
         print('max_m: ' + str(P.MAX_M))
+        print('max_h: ' + str(P.MAX_H))
         print('excite: ' + str(P.EXCITE))
         print('inhibit: ' + str(P.INHIBIT))
+
+        print('\n')
+
+        print('Maximum number of steps in coordination:' + str(P.MAX_COORD_STEPS))
+        
+        print('\n')
+        
+        # TODO - This can be made prettier
+        mbti_types = ['ESTJ', 'ESTP', 'ESFJ', 'ESFP', 'ENTJ', 'ENTP', 'ENFJ', 'ENFP', 'ISTJ', 'ISTP', 'ISFJ', 'ISFP', 'INTJ', 'INTP', 'INFJ', 'INFP']
+
+        print('MBTI Matrix:')
+        print('\t'.join(mbti_types))
+        for i in range(len(mbti_types)):
+            print(mbti_types[i] + '\t')
+            for j in range(len(mbti_types)):
+                print(P.MBTI[i][j], end='\t')
 
     def print_history(self):
         for i in range(len(self.timeline)):
