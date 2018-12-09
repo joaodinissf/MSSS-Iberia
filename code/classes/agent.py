@@ -1,6 +1,6 @@
 import math
 import numpy as np
-import parameters as P
+import my_parameters as P
 
 # TODO
 # Agents should be initialised with an MBTI and an initial_frustration
