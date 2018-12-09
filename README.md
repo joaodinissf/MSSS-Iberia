@@ -78,6 +78,7 @@ The following are things that are needed or that we assume you have:
 * 
 
 `git clone https://github.com/Amazong/MSSS-Iberia.git`
+
 `cd code/`
 e.g. git clone URL_PROY; cd URL_PROY; python3 main.py --light_test (#--light test runs in less than 5minutes with up to date hardware)) 
 
@@ -90,6 +91,6 @@ In order to work with all the project, one needs to install all the dependencies
 
 This may take a while, but it will install all the libraries we used.
 
-*Note*: if you want to generate the video we have in MSSS-Iberia/code/outputs, you need to have `ffmpeg` installed in your computer.
+**Note**: if you want to generate the video we have in MSSS-Iberia/code/outputs, you need to have `ffmpeg` installed in your computer.
 This may help for Linux users: https://www.ostechnix.com/install-ffmpeg-linux/
 
