@@ -1,5 +1,4 @@
 # Modeling and Simulation of Social Systems Fall 2018
-(text between brackets to be removed)
 
 > * Group Name: Iberia
 > * Group participants names: Miguel Perez Sanchis, Joao Dinis Sanches Ferreira
@@ -69,5 +68,28 @@ Please read the report for a more complete explanation of the project, its goals
 
 # Reproducibility
 
-(step by step instructions to reproduce your results. *Keep in mind that people reading this should accomplish to reproduce your work within 10 minutes. It needs to be self-contained and easy to use*. e.g. git clone URL_PROY; cd URL_PROY; python3 main.py --light_test (#--light test runs in less than 5minutes with up to date hardware)) 
+## Short reproducibility test 
+We will guide you through the steps needed in order to get some of the results we got.
+
+### Requisites
+The following are things that are needed or that we assume you have:
+* Python 3 is the version used in the code. Note that things like the basic print() function changes from Py 2 to Py 3. Some things may work with Py 2, but some may not.
+
+* 
+
+`git clone https://github.com/Amazong/MSSS-Iberia.git`
+`cd code/`
+e.g. git clone URL_PROY; cd URL_PROY; python3 main.py --light_test (#--light test runs in less than 5minutes with up to date hardware)) 
+
+## 'Full test' to reproduce all the results
+
+### Requisites
+In order to work with all the project, one needs to install all the dependencies. Open the folder MSSS-Iberia, and install them like this:
+
+`pip install -r requirements.txt`
+
+This may take a while, but it will install all the libraries we used.
+
+*Note*: if you want to generate the video we have in MSSS-Iberia/code/outputs, you need to have `ffmpeg` installed in your computer.
+This may help for Linux users: https://www.ostechnix.com/install-ffmpeg-linux/
 
