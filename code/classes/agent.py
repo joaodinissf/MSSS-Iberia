@@ -6,7 +6,7 @@ import my_parameters as P
 # Agents should be initialised with an MBTI and an initial_frustration
 
 class Agent:
-    def __init__(self, _id, mbti = None, initial_frustration = None, skillset = []):
+    def __init__(self, _id, mbti = None, initial_frustration = None, skillset = [], verbose = False):
         self._id = _id
         self.mbti = '' if mbti == None else mbti
 
@@ -23,6 +23,7 @@ class Agent:
         self.current_action = []
         self.action_history = []
 
+        self.verbose = verbose        
         self.validate_internals()
 
     # ---------- INTERNAL VALIDATION ----------
@@ -36,7 +37,8 @@ class Agent:
     
     def validate_frustration(self):
         if self.frustration == []:
-            print("Warning: no initial frustration provided!")
+            if self.verbose:
+                print("Warning: no initial frustration provided!")
             return False
         return True
 
@@ -52,7 +54,8 @@ class Agent:
     # TODO Validate this funtion...
     def validate_mbti(self):
         if self.mbti == '':
-            print("Warning: empty MBTI provided!")
+            if self.verbose:
+                print("Warning: empty MBTI provided!")
             return False
         
         valid = True

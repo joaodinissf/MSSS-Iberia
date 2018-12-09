@@ -16,7 +16,7 @@ import my_parameters as P
 class Workplace:
     # ---------- INITIALISATION  ----------
 
-    def __init__(self, file=None):
+    def __init__(self, file=None, verbose=False):
         # Create an empty workplace
         self.agents = []
         self.completed_tasks = []
@@ -27,21 +27,23 @@ class Workplace:
         self.coordination_times = {}
         self.Tperf = {}
 
+        self.verbose = verbose
+
         if file:
             print("Reading from input file " + file + "...\n")
-            self.parse_json(file)
+            self.parse_json(file, verbose)
 
-    def parse_json(self, filename):
+    def parse_json(self, filename, verbose = False):
         with open(filename) as f:
             data = json.load(f)
-        for idx, agent in enumerate(data['agents']):
-            self.add_agent(idx, agent)
+        for idx, agent in enumerate(data['agents'], verbose):
+            self.add_agent(idx, agent, verbose = verbose)
         for idx, task in enumerate(data['tasks']):
             self.add_task(idx, task)
         
         self.import_parameters(data['parameters'])
 
-    def add_agent(self, idx, agent):
+    def add_agent(self, idx, agent, verbose = False):
         skills = [Skill(_id = skill['id'],
                         exp = skill['exp'],
                         mot = skill['mot'])
@@ -52,7 +54,8 @@ class Workplace:
         
         self.agents.append(Agent(_id = idx, mbti = mbti,
                                  initial_frustration = initial_frustration,
-                                 skillset = skills))
+                                 skillset = skills,
+                                 verbose=verbose))
 
     def add_task(self, idx, task):
         self.tasks_todo.append(Task(_id = idx, json_task = task))
@@ -109,7 +112,8 @@ class Workplace:
 
             self.process_current_task()
             
-            print('Processed task:\n' + str(self.current_task) + '\n')
+            if self.verbose:
+                print('Processed task:\n' + str(self.current_task) + '\n')
 
             self.completed_tasks.append(self.current_task)
             self.current_task = None
