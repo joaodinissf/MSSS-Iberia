@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import json
 import matplotlib.pyplot as plt
@@ -123,7 +124,9 @@ class Workplace:
             self.current_task = None
         
         # Output frustration values, for later plot
-        with open('../../media/moods.data', 'w') as f:
+        media_path = '../media/' if os.path.isdir('../media') \
+                     else '../../media/'
+        with open(media_path + 'moods.data', 'w') as f:
             for i in range(len(self.agents[0].frustration)):
                 f.write(str(self.agents[0].frustration[i]) + ', ' + \
                         str(self.agents[0].frustration[i]) + '\n')
