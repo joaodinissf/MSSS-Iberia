@@ -514,7 +514,6 @@ class Workplace:
 
         print('\n')
 
-        # TODO - This can be made prettier
         mbti_types = ['ESTJ', 'ESTP', 'ESFJ', 'ESFP', 'ENTJ', 'ENTP', 'ENFJ', 'ENFP', 'ISTJ', 'ISTP', 'ISFJ', 'ISFP', 'INTJ', 'INTP', 'INFJ', 'INFP']
 
         print('MBTI Matrix:')
