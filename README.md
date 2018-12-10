@@ -97,6 +97,8 @@ Refer to the JSON file to understand the number of actions and cycles of each ca
 
 ## 'Full test' to reproduce all the results
 
+Use python notebook `main.ipynb` that can be found in folder `code` 
+
 ### Requisites
 In order to work with all the project, one needs to install all the dependencies. Open the folder MSSS-Iberia, and install them like this:
 
