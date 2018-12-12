@@ -14,6 +14,7 @@ __BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 moods_file = os.path.join(__BASE_DIR, 'moods.data')
 mood_data = []
 
+#NAGENTS = 4
 NAGENTS = 2
 ymin, ymax = 0, 0 # initial values used to plot
 
